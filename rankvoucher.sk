@@ -1,0 +1,378 @@
+# This Skript is very customizable, but not fully setup with the rank giving system.
+
+# Rank Voucher Skript
+# Main Developer: splixey#8825
+
+# Rank Voucher Command
+
+command /rankvoucher [<player>] [<text>]:
+    aliases: /rv
+    permission: admin.rankvoucher
+    permission message: &4&lHey! &7You do not have permission to use this command.
+    trigger:
+        if arg-1 is set: #(as in player)
+            if arg-2 is set: #(as in rank)
+                if arg-2 is "quartz" or "gold" or "piglin" or "magma" or "lava" or "lord" or "blaze" or "blaze+":
+                    if arg-2 is "quartz":
+                        give arg-1 glowing quartz named "&f&lQuartz Rank &b(Right-Click)" with lore "" and "&dOn Redeem:" and "&b • Permission to /fly" and "&b • +15 Generator Slots" and "&b • Access to Quartz Kit &8(/kits)" and "&b • Access to 3 Plots" and "&b • &f&8[&fQuartz&8] &bPrefix" and "" and "&dHow to Redeem:" and "&b • Right-Click to Redeem" and ""
+                    if arg-2 is "gold":
+                        give arg-1 glowing gold ingot named "&e&lGold Rank &b(Right-Click)" with lore "" and "&dOn Redeem:" and "&b • Permission to /fly" and "&b • +20 Generator Slots" and "&b • Access to Gold Kit &8(/kits)" and "&b • Access to 3 Plots" and "&b • &8[&eGold&8]&b Prefix" and "&b • Permission to /chatcolor" and "" and "&dHow to Redeem:" and "&b • Right-Click to Redeem" and ""
+                    if arg-2 is "piglin":
+                        give arg-1 glowing piglin spawn egg named "&a&lPiglin Rank &b(Right-Click)" with lore "" and "&dOn Redeem:" and "&b • Permission to /fly" and "&b • +30 Generator Slots" and "&b • Access to Piglin Kit &8(/kits)" and "&b • Access to 3 Plots" and "&b • &8[&aPiglin&8]&b Prefix" and "&b • Permission to /chatcolor" and "&b • Permission to /plot music" and "" and "&dHow to Redeem:" and "&b • Right-Click to Redeem" and ""
+                    if arg-2 is "magma":
+                        give arg-1 glowing magma cream named "&8&lMagma Rank &b(Right-Click)" with lore "" and "&dOn Redeem:" and "&b • Permission to /fly" and "&b • +45 Generator Slots" and "&b • Access to Magma Kit &8(/kit)" and "&b • Access to 3 Plots" and "&b • &8[&8&lMagma&r&8]&b Prefix" and "&b • Permission to /chatcolor" and "&b • Permission to /plot music" and "&b • Permission to /autosell &8(Mining Perk)" and "" and "&dHow to Redeem:" and "&b • Right-Click to Redeem" and ""
+                    if arg-2 is "lava":
+                        give arg-1 glowing lava bucket named "&6&lLava Rank &b(Right-Click)" with lore "" and "&dOn Redeem:" and "&b • Permission to /fly" and "&b • +65 Generator Slots" and "&b • Access to Lava Kit &8(/kit)" and "&b • Access to 3 Plots" and "&b • &8[&6&lLava&8] &bPrefix" and "&b • Permission to /chatcolor" and "&b • Permission to /plot music" and "&b • Permission to /autosell &8(Mining Perk)" and "&b • Secondary Daily Reward" and "" and "&dHow to Redeem:" and "&b • Right-Click to Redeem" and ""
+                    if arg-2 is "lord":
+                        give arg-1 glowing flint and steel named "&8&lLord Rank &b(Right-Click)" with lore "" and "&dOn Redeem:" and "&b • Permission to /fly" and "&b • +80 Generator Slots" and "&b • Access to Lord Kit &8(/kit)" and "&b • Access to 3 Plots" and "&b • &8[&8&l&k;; &8&lLord &8&l&k;;&8] &bPrefix" and "&b • Permission to /chatcolor" and "&b • Permission to /plot music" and "&b • Permission to /autosell &8(Mining Perk)" and "&b • Secondary Daily Reward" and "&b • +10 Hopper Slots" and "" and "&dHow to Redeem:" and "&b • Right-Click to Redeem" and ""
+                    if arg-2 is "blaze":
+                        give arg-1 glowing blaze rod named "<##FFA500>&lBlaze Rank &b(Right-Click)" with lore "" and "&dOn Redeem:" and "&b • Permission to /fly" and "&b • +95 Generator Slots" and "&b • Access to Blaze Kit &8(/kit)" and "&b • Access to 3 Plots" and "&b&b • &8[<##FFA500>&l&k;; <##FFA500>&lBlaze <##FFA500>&l&k;;&8] &bPrefix" and "&b • Permission to /chatcolor" and "&b • Permission to /plot music" and "&b • Permission to /autosell &8(Mining Perk)" and "&b • Secondary Daily Reward" and "&b • +15 Hopper Slots" and "&b • Permission to /enderchest" and "" and "&dHow to Redeem:" and "&b • Right-Click to Redeem" and ""
+                    if arg-2 is "blaze+":
+                        give arg-1 glowing blaze powder named "<##FFA500>&lBlaze&c&l+ <##FFA500>&lRank &b(Right-Click)" with lore "" and "&dOn Redeem:" and "&b • Permission to /fly" and "&b • +110 Generator Slots" and "&b • Access to Blaze+ Kit &8(/kit)" and "&b • Access to 8 Plots" and "&b • &8[<##FFA500>&l&k;; <##FFA500>&lBlaze&c&l+ <##FFA500>&l&k;;&8] &bPrefix" and "&b • Permission to /chatcolor" and "&b • Permission to /plot music" and "&b • Permission to /autosell &8(Mining Perk)" and "&b • Seondary Daily Reward" and "&b • +20 Hopper Slots" and "&b • Permission to /enderchest" and "&b • Permission to /nick" and "" and "&dHow to Redeem:" and "&b • Right-Click to Redeem" and ""
+                if arg-2 is not "quartz" or "gold" or "piglin" or "magma" or "lava" or "lord" or "blaze" or "blaze+":
+                    send ""
+                    send "&bShowing options for Rank Voucher:"
+                    send "  &f • Quartz &8($2.50 USD)"
+                    send "  &f • Gold &8($5.00 USD)"
+                    send "  &f • Piglin &8($10.00 USD)"
+                    send "  &f • Magma &8($15.00 USD)"
+                    send "  &f • Lava &8($20.00 USD)"
+                    send "  &f • Lord &8($25.00 USD)"
+                    send "  &f • Blaze &8($30.00 USD)"
+                    send "  &f • Blaze+ &8($35.00 USD)"
+                    send ""
+                    send "&bShowing correct usage for Rank Voucher:"
+                    send "  &f • &c/rankvoucher <player> <rank>"
+                    send ""
+            if arg-2 is not set:
+                send "&4&lWhoops! &7You must specify a rank!"
+        if arg-1 is not set:
+            send "&4&lWhoops! &7You must specify a player!"
+
+
+
+on right click:
+
+                # Quartz Rank
+    if player is holding quartz named "&f&lQuartz Rank &b(Right-Click)" with lore "" and "&dOn Redeem:" and "&b • Permission to /fly" and "&b • +15 Generator Slots" and "&b • Access to Quartz Kit &8(/kits)" and "&b • Access to 3 Plots" and "&b • &f&8[&fQuartz&8] &bPrefix" and "" and "&dHow to Redeem:" and "&b • Right-Click to Redeem" and "":
+        cancel event
+        if {rankvoucher::quartz::%player's uuid%} is not set:    
+            remove 1 quartz named "&f&lQuartz Rank &b(Right-Click)" with lore "" and "&dOn Redeem:" and "&b • Permission to /fly" and "&b • +15 Generator Slots" and "&b • Access to Quartz Kit &8(/kits)" and "&b • Access to 3 Plots" and "&b • &f&8[&fQuartz&8] &bPrefix" and "" and "&dHow to Redeem:" and "&b • Right-Click to Redeem" and "" from player's inventory
+            send "&d&lRank Voucher &8» &7Redeemed &8[&f&lQuartz Rank&8]"
+            set {rankvoucher::quartz::%player's uuid%} to true
+        else if {rankvoucher::quartz::%player's uuid%} is set:
+            send "&4&lWhoops! &7You already claimed this item!"
+
+                # Gold Rank 
+    if player is holding gold ingot named "&e&lGold Rank &b(Right-Click)" with lore "" and "&dOn Redeem:" and "&b • Permission to /fly" and "&b • +20 Generator Slots" and "&b • Access to Gold Kit &8(/kits)" and "&b • Access to 3 Plots" and "&b • &8[&eGold&8]&b Prefix" and "&b • Permission to /chatcolor" and "" and "&dHow to Redeem:" and "&b • Right-Click to Redeem" and "":
+        cancel event
+        if {rankvoucher::gold::%player's uuid%} is not set:
+            remove 1 gold ingot named "&e&lGold Rank &b(Right-Click)" with lore "" and "&dOn Redeem:" and "&b • Permission to /fly" and "&b • +20 Generator Slots" and "&b • Access to Gold Kit &8(/kits)" and "&b • Access to 3 Plots" and "&b • &8[&eGold&8]&b Prefix" and "&b • Permission to /chatcolor" and "" and "&dHow to Redeem:" and "&b • Right-Click to Redeem" and "" from player's inventory
+            send "&d&lRank Voucher &8» &7Redeemed &8[&e&lGold Rank&8]"
+            set {rankvoucher::gold::%player's uuid%} to true
+        else if {rankvoucher::gold::%player's uuid%} is set:
+            send "&4&lWhoops! &7You already claimed this item!"
+    
+                # Piglin Rank
+    if player is holding piglin spawn egg named "&a&lPiglin Rank &b(Right-Click)" with lore "" and "&dOn Redeem:" and "&b • Permission to /fly" and "&b • +30 Generator Slots" and "&b • Access to Piglin Kit &8(/kits)" and "&b • Access to 3 Plots" and "&b • &8[&aPiglin&8]&b Prefix" and "&b • Permission to /chatcolor" and "&b • Permission to /plot music" and "" and "&dHow to Redeem:" and "&b • Right-Click to Redeem" and "":
+        cancel event
+        if {rankvoucher::piglin::%player's uuid%} is not set:
+            remove 1 piglin spawn egg named "&a&lPiglin Rank &b(Right-Click)" with lore "" and "&dOn Redeem:" and "&b • Permission to /fly" and "&b • +30 Generator Slots" and "&b • Access to Piglin Kit &8(/kits)" and "&b • Access to 3 Plots" and "&b • &8[&aPiglin&8]&b Prefix" and "&b • Permission to /chatcolor" and "&b • Permission to /plot music" and "" and "&dHow to Redeem:" and "&b • Right-Click to Redeem" and "" from player's inventory
+            send "&d&lRank Voucher &8» &7Redeemed &8[&a&lPiglin Rank&8]"
+            set {rankvoucher::piglin::%player's uuid%} to true
+        else if {rankvoucher::piglin::%player's uuid%} is set:
+            send "&4&lWhoops! &7You already claimed this item!"
+    
+                # Magma
+    if player is holding magma cream named "&8&lMagma Rank &b(Right-Click)" with lore "" and "&dOn Redeem:" and "&b • Permission to /fly" and "&b • +45 Generator Slots" and "&b • Access to Magma Kit &8(/kit)" and "&b • Access to 3 Plots" and "&b • &8[&8&lMagma&r&8]&b Prefix" and "&b • Permission to /chatcolor" and "&b • Permission to /plot music" and "&b • Permission to /autosell &8(Mining Perk)" and "" and "&dHow to Redeem:" and "&b • Right-Click to Redeem" and "":
+        cancel event
+        if {rankvoucher::magma::%player's uuid%} is not set:
+            remove 1 magma cream named "&8&lMagma Rank &b(Right-Click)" with lore "" and "&dOn Redeem:" and "&b • Permission to /fly" and "&b • +45 Generator Slots" and "&b • Access to Magma Kit &8(/kit)" and "&b • Access to 3 Plots" and "&b • &8[&8&lMagma&r&8]&b Prefix" and "&b • Permission to /chatcolor" and "&b • Permission to /plot music" and "&b • Permission to /autosell &8(Mining Perk)" and "" and "&dHow to Redeem:" and "&b • Right-Click to Redeem" and "" from player's inventory
+            send "&d&lRank Voucher &8» &7Redeemed &8[&8&lMagma Rank&8]" 
+            set {rankvoucher::magma::%player's uuid%} to true
+        else if {rankvoucher::magma::%player's uuid%} is set:   
+            send "&4&lWhoops! &7You already claimed this item!"
+    
+                # Lava
+    if player is holding lava bucket named "&6&lLava Rank &b(Right-Click)" with lore "" and "&dOn Redeem:" and "&b • Permission to /fly" and "&b • +65 Generator Slots" and "&b • Access to Lava Kit &8(/kit)" and "&b • Access to 3 Plots" and "&b • &8[&6&lLava&8] &bPrefix" and "&b • Permission to /chatcolor" and "&b • Permission to /plot music" and "&b • Permission to /autosell &8(Mining Perk)" and "&b • Secondary Daily Reward" and "" and "&dHow to Redeem:" and "&b • Right-Click to Redeem" and "":
+        cancel event
+        if {rankvoucher::lava::%player's uuid%} is not set:
+            remove 1 lava bucket named "&6&lLava Rank &b(Right-Click)" with lore "" and "&dOn Redeem:" and "&b • Permission to /fly" and "&b • +65 Generator Slots" and "&b • Access to Lava Kit &8(/kit)" and "&b • Access to 3 Plots" and "&b • &8[&6&lLava&8] &bPrefix" and "&b • Permission to /chatcolor" and "&b • Permission to /plot music" and "&b • Permission to /autosell &8(Mining Perk)" and "&b • Secondary Daily Reward" and "" and "&dHow to Redeem:" and "&b • Right-Click to Redeem" and "" from player's inventory
+            send "&d&lRank Voucher &8» &7Redeemed &8[&6&lLava Rank&8]"
+            set {rankvoucher::lava::%player's uuid%} to true
+        else if {rankvoucher::lava::%player's uuid%} is set:
+            send "&4&lWhoops! &7You already claimed this item!"
+
+                # Lord
+
+    if player is holding flint and steel named "&8&lLord Rank &b(Right-Click)" with lore "" and "&dOn Redeem:" and "&b • Permission to /fly" and "&b • +80 Generator Slots" and "&b • Access to Lord Kit &8(/kit)" and "&b • Access to 3 Plots" and "&b • &8[&8&l&k;; &8&lLord &8&l&k;;&8] &bPrefix" and "&b • Permission to /chatcolor" and "&b • Permission to /plot music" and "&b • Permission to /autosell &8(Mining Perk)" and "&b • Secondary Daily Reward" and "&b • +10 Hopper Slots" and "" and "&dHow to Redeem:" and "&b • Right-Click to Redeem" and "":
+        cancel event
+        if {rankvoucher::lord::%player's uuid%} is not set:
+            remove 1 flint and steel named "&8&lLord Rank &b(Right-Click)" with lore "" and "&dOn Redeem:" and "&b • Permission to /fly" and "&b • +80 Generator Slots" and "&b • Access to Lord Kit &8(/kit)" and "&b • Access to 3 Plots" and "&b • &8[&8&l&k;; &8&lLord &8&l&k;;&8] &bPrefix" and "&b • Permission to /chatcolor" and "&b • Permission to /plot music" and "&b • Permission to /autosell &8(Mining Perk)" and "&b • Secondary Daily Reward" and "&b • +10 Hopper Slots" and "" and "&dHow to Redeem:" and "&b • Right-Click to Redeem" and "" from player's inventory
+            send "&d&lRank Voucher &8» &7Redeemed &8[&8&lLord Rank&8]"
+            set {rankvoucher::lord::%player's uuid%} to true
+        else if {rankvoucher::lord::%player's uuid%} is set:
+            send "&4&lWhoops! &7You already claimed this item!"
+    
+                # Blaze
+    if player is holding blaze rod named "<##FFA500>&lBlaze Rank &b(Right-Click)" with lore "" and "&dOn Redeem:" and "&b • Permission to /fly" and "&b • +95 Generator Slots" and "&b • Access to Blaze Kit &8(/kit)" and "&b • Access to 3 Plots" and "&b&b • &8[<##FFA500>&l&k;; <##FFA500>&lBlaze <##FFA500>&l&k;;&8] &bPrefix" and "&b • Permission to /chatcolor" and "&b • Permission to /plot music" and "&b • Permission to /autosell &8(Mining Perk)" and "&b • Secondary Daily Reward" and "&b • +15 Hopper Slots" and "&b • Permission to /enderchest" and "" and "&dHow to Redeem:" and "&b • Right-Click to Redeem" and "":
+        cancel event
+        if {rankvoucher::blaze::%player's uuid%} is not set:
+            remove 1 blaze rod named "<##FFA500>&lBlaze Rank &b(Right-Click)" with lore "" and "&dOn Redeem:" and "&b • Permission to /fly" and "&b • +95 Generator Slots" and "&b • Access to Blaze Kit &8(/kit)" and "&b • Access to 3 Plots" and "&b&b • &8[<##FFA500>&l&k;; <##FFA500>&lBlaze <##FFA500>&l&k;;&8] &bPrefix" and "&b • Permission to /chatcolor" and "&b • Permission to /plot music" and "&b • Permission to /autosell &8(Mining Perk)" and "&b • Secondary Daily Reward" and "&b • +15 Hopper Slots" and "&b • Permission to /enderchest" and "" and "&dHow to Redeem:" and "&b • Right-Click to Redeem" and "" from player's inventory
+            send "&d&lRank Voucher &8» &7Redeemed &8[<##FFA500>&lBlaze Rank&8]"
+            set {rankvoucher::blaze::%player's uuid%} to true
+        else if {rankvoucher::blaze::%player's uuid%} is not set:
+            send "&4&lWhoops! &7You already claimed this item!"
+    
+                # Blaze+
+    if player is holding blaze powder named "<##FFA500>&lBlaze&c&l+ <##FFA500>&lRank &b(Right-Click)" with lore "" and "&dOn Redeem:" and "&b • Permission to /fly" and "&b • +110 Generator Slots" and "&b • Access to Blaze+ Kit &8(/kit)" and "&b • Access to 8 Plots" and "&b • &8[<##FFA500>&l&k;; <##FFA500>&lBlaze&c&l+ <##FFA500>&l&k;;&8] &bPrefix" and "&b • Permission to /chatcolor" and "&b • Permission to /plot music" and "&b • Permission to /autosell &8(Mining Perk)" and "&b • Seondary Daily Reward" and "&b • +20 Hopper Slots" and "&b • Permission to /enderchest" and "&b • Permission to /nick" and "" and "&dHow to Redeem:" and "&b • Right-Click to Redeem" and "":
+        cancel event
+        if {rankvoucher::blaze+::%player's uuid%} is not set:
+            remove 1 blaze powder named "<##FFA500>&lBlaze&c&l+ <##FFA500>&lRank &b(Right-Click)" with lore "" and "&dOn Redeem:" and "&b • Permission to /fly" and "&b • +110 Generator Slots" and "&b • Access to Blaze+ Kit &8(/kit)" and "&b • Access to 8 Plots" and "&b • &8[<##FFA500>&l&k;; <##FFA500>&lBlaze&c&l+ <##FFA500>&l&k;;&8] &bPrefix" and "&b • Permission to /chatcolor" and "&b • Permission to /plot music" and "&b • Permission to /autosell &8(Mining Perk)" and "&b • Seondary Daily Reward" and "&b • +20 Hopper Slots" and "&b • Permission to /enderchest" and "&b • Permission to /nick" and "" and "&dHow to Redeem:" and "&b • Right-Click to Redeem" and "" from player's inventory
+            send "&d&lRank Voucher &8» &7Redeemed &8[<##FFA500>&lBlaze&c&l+ <##FFA500>&lRank&8]"
+            set {rankvoucher::blaze+::%player's uuid%} to true
+        else if {rankvoucher::blaze+::%player's uuid%} is set:
+            send "&4&lWhoops! &7You already claimed this item!"
+
+
+
+command /rvreset [<offline player>] [<text>]:
+    permission: admin.resetrv
+    permission message: &4&lHey! &7You do not have permission to use this command.
+    trigger:
+        if arg-1 is set:
+            if arg-2 is set:
+                if arg-2 is "quartz" or "gold" or "piglin" or "magma" or "lava" or "lord" or "blaze" or "blaze+":
+                        # Quartz Rank
+                    if arg-2 is "quartz":
+                        if {rankvoucher::quartz::%arg-1's uuid%} is set:
+                            delete {rankvoucher::quartz::%arg-1's uuid%}
+                            send "&a&lSuccess! &7%arg-1% may now redeem a &8[&f&lQuartz Rank&8]&7!"
+                        else if {rankvoucher::quartz::%arg-1's uuid%} is not set:
+                            send "&4&lWhoops! &7%arg-1% never redeemed a &8[&f&lQuartz Rank&8]&7!"
+                    
+                        # Gold Rank
+                    if arg-2 is "gold":
+                        if {rankvoucher::gold::%player's uuid%} is set:
+                            delete {rankvoucher::gold::%player's uuid%}
+                            send "&a&lSuccess! &7%arg-1% may now redeem a &8[&e&lGold Rank&8]"
+                        else if {rankvoucher::gold::%player's uuid%} is not set:
+                            send "&4&lWhoops! &7%arg-1% never redeemed a &8[&e&lGold Rank&8]"
+
+                        # Piglin
+                    if arg-2 is "piglin":
+                        if {rankvoucher::piglin::%player's uuid%} is set:
+                            delete {rankvoucher::piglin::%player's uuid%}
+                            send "&a&lSuccess! &7%arg-1% may now redeem a &8[&a&lPiglin Rank&8]"
+                        else if {rankvoucher::piglin::%player's uuid%} is not set:
+                            send "&4&lWhoops! &7%arg-1% never redeemed a &8[&a&lPiglin Rank&8]"
+                    
+                        # Magma
+                    if arg-2 is "magma":
+                        if {rankvoucher::magma::%player's uuid%} is set:
+                            delete {rankvoucher::magma::%player's uuid%}
+                            send "&a&lSuccess! &7%arg-1% may now redeem a &8[&8&lMagma Rank&8]"
+                        else if {rankvoucher::magma::%player's uuid%} is not set:
+                            send "&4&lWhoops! &7%arg-1% never reedemed a &8[&8&lMagma Rank&8]"
+
+                        # Lava
+                    if arg-2 is "lava":
+                        if {rankvoucher::lava::%player's uuid%} is set:
+                            delete {rankvoucher::lava::%player's uuid%}
+                            send "&a&lSuccess! &7%arg-1% may now redeem a &8[&6&lLava Rank&8]"
+                        else if {rankvoucher::lava::%player's uuid%} is not set:
+                            send "&4&lWhoops! &7%arg-1% never redeemed a &8[&6&lLava Rank&8]"
+
+                        # Lord
+                    if arg-2 is "lord":
+                        if {rankvoucher::lord::%player's uuid%} is set:
+                            delete {rankvoucher::lord::%player's uuid%}
+                            send "&a&lSuccess! &7%arg-1% may now redeem a &8[&8&lLord Rank&8]"
+                        else if {rankvoucher::lord::%player's uuid%} is not set:
+                            send "&4&lWhoops! &7%arg-1% never redeemed a &8[&8&lLord Rank&8]"
+                    
+                        # Blaze
+                    if arg-2 is "blaze":
+                        if {rankvoucher::blaze::%player's uuid%} is set:
+                            delete {rankvoucher::blaze::%player's uuid%}
+                            send "&a&lSuccess! &7%arg-1% may now redeem a &8[<##FFA500>&lBlaze Rank&8]"
+                        else if {rankvoucher::blaze::%player's uuid%} is not set:
+                            send "&4&lWhoops! &7%arg-1% never redeemed a &8[<##FFA500>&lBlaze Rank&8]"
+                    
+                        # Blaze+
+                    if arg-2 is "blaze+":
+                        if {rankvoucher::blaze+::%player's uuid%} is set:
+                            delete {rankvoucher::blaze+::%player's uuid%}
+                            send "&a&lSuccess! &7%arg-1% may now redeem a &8[<##FFA500>&lBlaze&c&l+ <##FFA500>&lRank&8]"
+                        else if {rankvoucher::blaze+::%player's uuid%} is not set:
+                            send "&4&lWhoops! &7%arg-1% never redeemed a &8[<##FFA500>&lBlaze&c&l+ <##FFA500>&lRank&8]"
+                if arg-2 is not "quartz" or "gold" or "piglin" or "magma" or "lava" or "lord" or "blaze" or "blaze+":
+                    send ""
+                    send "&bShowing options for Resetting Rank Voucher:"
+                    send "  &f • Quartz &8($2.50 USD)"
+                    send "  &f • Gold &8($5.00 USD)"
+                    send "  &f • Piglin &8($10.00 USD)"
+                    send "  &f • Magma &8($15.00 USD)"
+                    send "  &f • Lava &8($20.00 USD)"
+                    send "  &f • Lord &8($25.00 USD)"
+                    send "  &f • Blaze &8($30.00 USD)"
+                    send "  &f • Blaze+ &8($35.00 USD)"
+                    send ""
+                    send "&bShowing correct usage for Reset Rank Voucher:"
+                    send "  &f • &c/rvreset <player> <rank>"
+                    send ""
+            if arg-2 is not set:
+                send ""
+                send "&bShowing options for Resetting Rank Voucher:"
+                send "  &f • Quartz &8($2.50 USD)"
+                send "  &f • Gold &8($5.00 USD)"
+                send "  &f • Piglin &8($10.00 USD)"
+                send "  &f • Magma &8($15.00 USD)"
+                send "  &f • Lava &8($20.00 USD)"
+                send "  &f • Lord &8($25.00 USD)"
+                send "  &f • Blaze &8($30.00 USD)"
+                send "  &f • Blaze+ &8($35.00 USD)"
+                send ""
+                send "&bShowing correct usage for Reset Rank Voucher:"
+                send "  &f • &c/rvreset <player> <rank>"
+                send ""
+        if arg-1 is not set:
+            send "&4&lWhoops! &7Please specify a player!"
+
+
+
+command /rvstatus [<player>] [<text>]:
+    permission: staff.rvstatus
+    permission message: &4&lHey! &7You do not have permission to use this command.
+    trigger:   
+        if arg-1 is set:
+            if arg-2 is set:
+                if arg-2 is "quartz" or "gold" or "piglin" or "magma" or "lava" or "lord" or "blaze" or "blaze+":
+                    
+                        # Quartz Rank
+                    if arg-2 is "quartz":
+                        send ""
+                        send "&b&lRank Voucher Status:"
+                        send "  &c • &7Player: &d%arg-1%"
+                        send "  &c • &7Rank: &8[&f&lQuartz Rank&8]"
+                        if {rankvoucher::quartz::%arg-1's uuid%} is set:
+                            send "  &c • &7Status: &cNot Ready &8| &cCan't Redeem"
+                        if {rankvoucher::quartz::%arg-1's uuid%} is not set:
+                            send "  &c • &7Status: &aReady &8|&a Can Redeem"
+                        send "" 
+                        
+                        # Gold Rank
+                    if arg-2 is "gold":
+                        send ""
+                        send "&b&lRank Voucher Status:"
+                        send "  &c • &7Player: &d%arg-1%"
+                        send "  &c • &7Rank: &8[&e&lGold Rank&8]"
+                        if {rankvoucher::gold::%arg-1's uuid%} is set:
+                            send "  &c • &7Status: &cNot Ready &8| &cCan't Redeem"
+                        if {rankvoucher::gold::%arg-1's uuid%} is not set:
+                            send "  &c • &7Status: &aReady &8|&a Can Redeem"
+                        send "" 
+                    
+                        # Piglin Rank
+                    if arg-2 is "piglin":
+                        send ""
+                        send "&b&lRank Voucher Status:"
+                        send "  &c • &7Player: &d%arg-1%"
+                        send "  &c • &7Rank: &8[&a&lPiglin Rank&8]"
+                        if {rankvoucher::piglin::%arg-1's uuid%} is set:
+                            send "  &c • &7Status: &cNot Ready &8| &cCan't Redeem"
+                        if {rankvoucher::piglin::%arg-1's uuid%} is not set:
+                            send "  &c • &7Status: &aReady &8|&a Can Redeem"
+                        send "" 
+                    
+                        # Magma Rank
+                    if arg-2 is "magma":
+                        send ""
+                        send "&b&lRank Voucher Status:"
+                        send "  &c • &7Player: &d%arg-1%"
+                        send "  &c • &7Rank: &8[&7&lMagma Rank&8]"
+                        if {rankvoucher::magma::%arg-1's uuid%} is set:
+                            send "  &c • &7Status: &cNot Ready &8| &cCan't Redeem"
+                        if {rankvoucher::magma::%arg-1's uuid%} is not set:
+                            send "  &c • &7Status: &aReady &8|&a Can Redeem"
+                        send "" 
+                    
+                        # Lava Rank
+                    if arg-2 is "lava":
+                        send ""
+                        send "&b&lRank Voucher Status:"
+                        send "  &c • &7Player: &d%arg-1%"
+                        send "  &c • &7Rank: &8[&6&lLava Rank&8]"
+                        if {rankvoucher::lava::%arg-1's uuid%} is set:
+                            send "  &c • &7Status: &cNot Ready &8| &cCan't Redeem"
+                        if {rankvoucher::lava::%arg-1's uuid%} is not set:
+                            send "  &c • &7Status: &aReady &8|&a Can Redeem"
+                        send "" 
+
+                        # Lord Rank
+                    if arg-2 is "lord":
+                        send ""
+                        send "&b&lRank Voucher Status:"
+                        send "  &c • &7Player: &d%arg-1%"
+                        send "  &c • &7Rank: &8[&8&lLord Rank&8]"
+                        if {rankvoucher::lord::%arg-1's uuid%} is set:
+                            send "  &c • &7Status: &cNot Ready &8| &cCan't Redeem"
+                        if {rankvoucher::lord::%arg-1's uuid%} is not set:
+                            send "  &c • &7Status: &aReady &8|&a Can Redeem"
+                        send "" 
+
+                        # Blaze Rank
+                    if arg-2 is "blaze":
+                        send ""
+                        send "&b&lRank Voucher Status:"
+                        send "  &c • &7Player: &d%arg-1%"
+                        send "  &c • &7Rank: &8[<##FFA500>&lBlaze Rank&8]"
+                        if {rankvoucher::blaze::%arg-1's uuid%} is set:
+                            send "  &c • &7Status: &cNot Ready &8| &cCan't Redeem"
+                        if {rankvoucher::blaze::%arg-1's uuid%} is not set:
+                            send "  &c • &7Status: &aReady &8|&a Can Redeem"
+                        send "" 
+                    
+                        # Blaze+ Rank
+                    if arg-2 is "blaze+":
+                        send ""
+                        send "&b&lRank Voucher Status:"
+                        send "  &c • &7Player: &d%arg-1%"
+                        send "  &c • &7Rank: &8[<##FFA500>&lBlaze&c&l+ <##FFA500>&lRank&8]"
+                        if {rankvoucher::blaze+::%arg-1's uuid%} is set:
+                            send "  &c • &7Status: &cNot Ready &8| &cCan't Redeem"
+                        if {rankvoucher::blaze+::%arg-1's uuid%} is not set:
+                            send "  &c • &7Status: &aReady &8|&a Can Redeem"
+                        send "" 
+                if arg-2 is not "quartz" or "gold" or "piglin" or "lava" or "lord" or "blaze" or "blaze+":
+                    send ""
+                    send "&bShowing options for Rank Voucher Status:"
+                    send "  &f • Quartz &8($2.50 USD)"
+                    send "  &f • Gold &8($5.00 USD)"
+                    send "  &f • Piglin &8($10.00 USD)"
+                    send "  &f • Magma &8($15.00 USD)"
+                    send "  &f • Lava &8($20.00 USD)"
+                    send "  &f • Lord &8($25.00 USD)"
+                    send "  &f • Blaze &8($30.00 USD)"
+                    send "  &f • Blaze+ &8($35.00 USD)"
+                    send ""
+                    send "&bShowing correct usage for Rank Voucher Status:"
+                    send "  &f • &c/rvstatus <player> <rank>"
+                    send ""
+            if arg-2 is not set:
+                send ""
+                send "&bShowing options for Rank Voucher Status:"
+                send "  &f • Quartz &8($2.50 USD)"
+                send "  &f • Gold &8($5.00 USD)"
+                send "  &f • Piglin &8($10.00 USD)"
+                send "  &f • Magma &8($15.00 USD)"
+                send "  &f • Lava &8($20.00 USD)"
+                send "  &f • Lord &8($25.00 USD)"
+                send "  &f • Blaze &8($30.00 USD)"
+                send "  &f • Blaze+ &8($35.00 USD)"
+                send ""
+                send "&bShowing correct usage for Rank Voucher Status:"
+                send "  &f • &c/rvstatus <player> <rank>"
+                send ""
+        if arg-1 is not set:
+            send "&4&lWhoops! &7Please specify a player!"
