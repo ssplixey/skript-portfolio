@@ -1,0 +1,120 @@
+# This skript is a custom currency that is equipped with the different perks and customization.
+ 
+# Custom Currency Skript
+# Main Developer: splixey#8825
+
+options:
+    symbol: ❋
+    prefix: &5&lSHARDS &8»
+
+on join:
+    loop all players:
+        if {shards::balance::%loop-player's uuid%} is not set:
+            set {shards::balance::%loop-player's uuid%} to 0
+            
+every 100 seconds:
+    loop all players:
+        if {shards::balance::%loop-player's uuid%} is not set:
+            set {shards::balance::%loop-player's uuid%} to 0
+
+command /shards [<player>]:
+    trigger:
+        if arg-1 is set:
+            if player has permission "staff.viewshards":
+                if {shards::balance::%arg-1's uuid%} is set:
+                    send "&6%arg-1%'s Shards: &d%{shards::balance::%arg-1's uuid%}% {@symbol}"
+                if {shards::balance::%arg-1's uuid%} is not set:
+                    set {shards::balance::%arg-1's uuid%} to 0
+                    send "&6%arg-1%'s Shards: &d%{shards::balance::%arg-1's uuid%}% {@symbol}"
+            
+            if player does not have permission "staff.viewshards":
+                send " &4&lHey! &7You do not have permission to use this extension."
+        if arg-1 is not set:
+            send "&6Shards: &d%{shards::balance::%player's uuid%}% {@symbol}"
+
+command /shardsmanage [<player>] [<text>] [<int>]:
+    aliases: /smanage
+    permission: admin.shardsmanage
+    permission message: &4&lHey! &7You do not have permission to use this command.
+    trigger:
+        if arg-1 is set:
+            if arg-2 is set:
+                if arg-2 is "set" or "add" or "remove" or "options":
+                    if arg-3 is set:
+                        
+                        if arg-2 is "set":
+                            set {shards::balance::%arg-1's uuid%} to arg-3
+                            send "{@prefix} &aSet %arg-1%'s shard balance to %arg-3%."
+                            send "{@prefix} &7Your shard balance was set to %arg-3% by %player%." to arg-1
+
+                        if arg-2 is "add":
+                            add arg-3 to {shards::balance::%arg-1's uuid%}
+                            send "{@prefix} &aAdded %arg-3% to %arg-1%'s shard balance. &7New Shard Balance: &f%{shards::balance::%arg-1's uuid%}%"
+                            send "{@prefix} &7%arg-3% has been added to your shard balance by %player%. &7/shards" to arg-1
+                        
+                        if arg-2 is "remove":
+                            remove arg-3 from {shards::balance::%arg-1's uuid%}
+                            send "{@prefix} &aRemoved %arg-3% from %arg-1%'s shard balance. &7New Shard Balance: &f%{shards::balance::%arg-1's uuid%}%"
+                            send "{@prefix} &7%arg-3% has been removed from your shard balance by %player%. &7/shards" to arg-1
+                    
+                    if arg-3 is not set:
+                        
+                        if arg-2 is "options":
+                            send ""
+                            send " &b&lShard Manage Options:"
+                            send "   &8• &fSet &c&l: &7Set a player's shard balance."
+                            send "   &8• &fRemove &c&l: &7Remove a specific number from a player's shard balance."
+                            send "   &8• &fAdd &c&l: &7Add a specific number to a player's shard balance."
+                            send ""
+                        
+                        else:
+                            send ""
+                            send " &b&lShard Manage Options:"
+                            send "   &8• &fSet &c&l: &7Set a player's shard balance."
+                            send "   &8• &fRemove &c&l: &7Remove a specific number from a player's shard balance."
+                            send "   &8• &fAdd &c&l: &7Add a specific number to a player's shard balance."
+                            send ""
+                if arg-2 is not "set" or "add" or "remove" or "options":
+                    send " &4&lWhoops! &7Invalid Option! &8/shardsmanage <player> <options>"
+            if arg-2 is not set:
+                send " &4&lWhoops! &7Please specify a option! &8/shardsmanage <player> <options>"
+        if arg-1 is not set:
+            send " &4&lWhoops! &7Please specify a player!"
+
+command /shardsreset [<text>] [<player>]:
+    aliases: /sreset
+    permission: admin.shardsreset
+    permission message: &cHey! &7You do not have permission to use this command.
+    trigger:
+        if arg-1 is set:
+            if arg-1 is "player" or "*":
+                if arg-1 is "player":
+                    if arg-2 is set:
+                        set {shards::balance::%arg-2's uuid%} to 0
+                        send "{@prefix} &aReset %arg-2%'s shards balance."
+                        send "{@prefix} &7Your shards have been reset by %player%." to arg-2 
+                    if arg-2 is not set:
+                        send " &4&lWhoops! &7Please specify a player!"
+                if arg-1 is "*":
+                    if player has permission "owner.allsreset":
+                        set metadata tag "ConfirmSReset" of player to chest inventory with 3 rows named "&6&lConfirm Mass Shards Reset"
+                        set slot 11 of metadata tag "ConfirmSReset" of player to green stained glass pane named "&a&lConfirm" with lore "&c&l: &cThis will reset everyone's" and "  &cshards balance." and "   &fClick to confirm."
+                        set slot 15 of metadata tag "ConfirmSReset" of player to red stained glass pane named "&4&lNevermind" with lore "   &fClick to close this interaction!"
+                        set slot 13 of metadata tag "ConfirmSReset" of player to emerald named "&6&lInformation:" with lore "" and "&b&lConfirm:" and "&c&l: &fClicking the 'confirm' button" and "  &fwill reset everyone's shard" and "  &fbalance including yours." and "&4&lUse this at your own risk." and "" and "&b&lNevermind:" and "&c&l: &fClicking this will close the GUI."
+                        open (metadata tag "ConfirmSReset" of player) to player
+                    if player does not have permission "owner.allsreset":
+                        send " &4&lHey! &7You do not have permission to use this extension."
+            if arg-1 is not "player" or "*":
+                send " &4&lWhoops. &7Specify 'player' or '*'"
+        if arg-1 is not set:
+            send " &4&lWhoops. &7Specify 'player' or '*'"
+
+on inventory click:
+    if event-inventory = (metadata tag "ConfirmSReset" of player):
+        if player has permission "owner.allsreset":
+            cancel event
+            if index of event-slot = 11:
+                set {shards::balance::*} to 0
+                send "{@prefix} &aReset all players shards balance."
+            if index of event-slot = 15:
+                close player's inventory
