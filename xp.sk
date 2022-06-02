@@ -1,0 +1,31 @@
+# Experience manager (might not work, not tested)
+
+options:
+    default_max_amount: 10
+    added_each_level: 15
+
+    default_level: 0
+    level_var: {level::%player's uuid%}
+    maxlvl_var: {level::max::%player's uuid%}
+    max_level: 10
+
+on join:
+    if {xp::%player's uuid%} is not set:
+        set {xp::%player's uuid%} 0
+        set {xp::max::%player's uuid%} to {@default_max_amount}
+        set {level::%player's uuid%} to {@default_level}
+        set {level::max::%player's uuid%} to {@max_level}
+
+on mine:
+    if event-block is coal ore:
+        send action bar "&5+1 XP &8(%{xp::%player's uuid%}%/{@default_max_amount}"
+        add 1 to {xp::%player's uuid%}
+        if {xp::%player's uuid%} = {xp::max::%player's uuid%}:
+            if {level::%player's uuid%} = {level::max::%player's uuid%}:
+                cancel event
+                send "&5&lLEVEL &8» &cError! &7You are the max level already. :("
+            else if {level::%player's uuid%} < {level::max::%player's uuid%}:
+                delete {xp::%player's uuid%}
+                wait 1 second
+                send "&5&lLEVEL &8» &7You leveled up! &8(%{level::%player's uuid%}%/{@max_level})"
+                add 1 to {level::%player's uuid%}
