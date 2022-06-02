@@ -1,0 +1,198 @@
+# This is a sort of Custom Currency Shop (not finished)
+
+# Lava Shards Shop
+# Main Developer: splixey#8825
+
+            # Functions
+function lsShopGUI(p: player):
+    set metadata tag "lsShop" of {_P} to chest inventory with 3 rows named "&aLava Shards Shop"
+    set slot 10 of metadata tag "lsShop" of {_P} to glowing diamond pickaxe named "&b&lTOOLS" with lore " &b➥ &fClick to Open"
+    set slot 12 of metadata tag "lsShop" of {_P} to glowing blaze rod named "&6&lSELLWANDS" with lore " &b➥ &fClick to Open"
+    set slot 14 of metadata tag "lsShop" of {_P} to glowing paper named "&d&lRANKS" with lore " &b➥ &fClick to Open"
+    set slot 16 of metadata tag "lsShop" of {_P} to glowing magenta glazed terracotta named "&9&lPERSONAL STATS" with lore " &b➥ &fClick to Open"
+    open (metadata tag "lsShop" of {_P}) to {_P} 
+
+function lsToolsGUI(p: player):
+    set metadata tag "lsShopTools" of {_P} to chest inventory with 6 rows named "&6Lava Shards Shop"
+
+    set slot 0 of metadata tag "lsShopTools" of {_P} to glowing diamond pickaxe named "&b&lTOOLS" with lore " &b➥ &fClick to Open"
+    set slot 1 of metadata tag "lsShopTools" of {_P} to glowing green stained glass pane named " "
+
+    set slot 9 of metadata tag "lsShopTools" of {_P} to glowing blaze rod named "&6&lSELLWANDS" with lore " &b➥ &fClick to Open"
+    set slot 10 of metadata tag "lsShopTools" of {_P} to gray stained glass pane named " "
+
+    set slot 18 of metadata tag "lsShopTools" of {_P} to glowing paper named "&d&lRANKS" with lore " &b➥ &fClick to Open"
+    set slot 19 of metadata tag "lsShopTools" of {_P} to gray stained glass pane named " "
+    
+    set slot 27 of metadata tag "lsShopTools" of {_P} to glowing magenta glazed terracotta named "&9&lPERSONAL STATS" with lore " &b➥ &fClick to Open"
+    set slot 28 of metadata tag "lsShopTools" of {_P} to gray stained glass pane named " "
+
+    set slot (integers between 36 and 44) of metadata tag "lsShopTools" of {_P} to blue stained glass pane named " "
+
+    if {lavashards::balance::%{_P}'s uuid%} is set:
+        if {lavashards::balance::%{_P}'s uuid%} is 0:
+            set slot 49 of metadata tag "lsShopTools" of {_P} to emerald named "&d&lLava Shards Balance:" with lore " &b➥ &dNone :("
+        if {lavashards::balance::%{_P}'s uuid%} >= 1:
+            set slot 49 of metadata tag "lsShopTools" of {_P} to emerald named "&d&lLava Shards Balance:" with lore " &b➥ &d%{lavashards::balance::%{_P}'s uuid%}% ☢"
+    if {lavashards::balance::%{_P}'s uuid%} is not set:
+        set {lavashards::balance::%{_P}'s uuid%} to 0
+        set slot 49 of metadata tag "lsShopTools" of {_P} to emerald named "&d&lLava Shards Balance:" with lore " &b➥ &dNone :("
+    
+    set slot (integers between 36 and 44) of metadata tag "lsShopTools" of {_P} to blue stained glass pane named " "
+
+    open (metadata tag "lsShopTools" of {_P}) to {_P}
+
+
+function lsSellWandGUI(p: player):
+    set metadata tag "lsShopSW" of {_P} to chest inventory with 6 rows named "&6Lava Shards Shop"
+
+    set slot 0 of metadata tag "lsShopSW" of {_P} to glowing diamond pickaxe named "&b&lTOOLS" with lore " &b➥ &fClick to Open"
+    set slot 1 of metadata tag "lsShopSW" of {_P} to gray stained glass pane named " "
+
+    set slot 9 of metadata tag "lsShopSW" of {_P} to glowing blaze rod named "&6&lSELLWANDS" with lore " &b➥ &fClick to Open"
+    set slot 10 of metadata tag "lsShopSW" of {_P} to glowing green stained glass pane named " "
+
+    set slot 18 of metadata tag "lsShopSW" of {_P} to glowing paper named "&d&lRANKS" with lore " &b➥ &fClick to Open"
+    set slot 19 of metadata tag "lsShopSW" of {_P} to gray stained glass pane named " "
+    
+    set slot 27 of metadata tag "lsShopSW" of {_P} to glowing magenta glazed terracotta named "&9&lPERSONAL STATS" with lore " &b➥ &fClick to Open"
+    set slot 28 of metadata tag "lsShopSW" of {_P} to gray stained glass pane named " "
+
+    set slot (integers between 36 and 44) of metadata tag "lsShopTools" of {_P} to blue stained glass pane named " "
+
+    if {lavashards::balance::%{_P}'s uuid%} is set:
+        if {lavashards::balance::%{_P}'s uuid%} is 0:
+            set slot 49 of metadata tag "lsShopSW" of {_P} to emerald named "&d&lLava Shards Balance:" with lore " &b➥ &dNone :("
+        if {lavashards::balance::%{_P}'s uuid%} >= 1:
+            set slot 49 of metadata tag "lsShopSW" of {_P} to emerald named "&d&lLava Shards Balance:" with lore " &b➥ &d%{lavashards::balance::%{_P}'s uuid%}% ☢"
+    if {lavashards::balance::%{_P}'s uuid%} is not set:
+        set {lavashards::balance::%{_P}'s uuid%} to 0
+        set slot 49 of metadata tag "lsShopSW" of {_P} to emerald named "&d&lLava Shards Balance:" with lore " &b➥ &dNone :("
+
+    set slot (integers between 36 and 44) of metadata tag "lsShopSW" of {_P} to blue stained glass pane named " "
+    
+    open (metadata tag "lsShopSW" of {_P}) to {_P}
+
+
+function lsRanksGUI(p: player):
+    set metadata tag "lsShopRanks" of {_P} to chest inventory with 6 rows named "&6Lava Shards Shop"
+
+    set slot 0 of metadata tag "lsShopRanks" of {_P} to glowing diamond pickaxe named "&b&lTOOLS" with lore " &b➥ &fClick to Open"
+    set slot 1 of metadata tag "lsShopRanks" of {_P} to gray stained glass pane named " "
+
+    set slot 9 of metadata tag "lsShopRanks" of {_P} to glowing blaze rod named "&6&lSELLWANDS" with lore " &b➥ &fClick to Open"
+    set slot 10 of metadata tag "lsShopRanks" of {_P} to gray stained glass pane named " "
+
+    set slot 18 of metadata tag "lsShopRanks" of {_P} to glowing paper named "&d&lRANKS" with lore " &b➥ &fClick to Open"
+    set slot 19 of metadata tag "lsShopRanks" of {_P} to glowing green stained glass pane named " "
+    
+    set slot 27 of metadata tag "lsShopRanks" of {_P} to glowing magenta glazed terracotta named "&9&lPERSONAL STATS" with lore " &b➥ &fClick to Open"
+    set slot 28 of metadata tag "lsShopRanks" of {_P} to gray stained glass pane named " "
+
+    set slot (integers between 36 and 44) of metadata tag "lsShopRanks" of {_P} to blue stained glass pane named " "
+
+    if {lavashards::balance::%{_P}'s uuid%} is set:
+        if {lavashards::balance::%{_P}'s uuid%} is 0:
+            set slot 49 of metadata tag "lsShopRanks" of {_P} to emerald named "&d&lLava Shards Balance:" with lore " &b➥ &dNone :("
+        if {lavashards::balance::%{_P}'s uuid%} >= 1:
+            set slot 49 of metadata tag "lsShopRanks" of {_P} to emerald named "&d&lLava Shards Balance:" with lore " &b➥ &d%{lavashards::balance::%{_P}'s uuid%}% ☢"
+    if {lavashards::balance::%{_P}'s uuid%} is not set:
+        set {lavashards::balance::%{_P}'s uuid%} to 0
+        set slot 49 of metadata tag "lsShopRanks" of {_P} to emerald named "&d&lLava Shards Balance:" with lore " &b➥ &dNone :("
+
+    set slot (integers between 36 and 44) of metadata tag "lsShopRanks" of {_P} to blue stained glass pane named " "
+
+    open (metadata tag "lsShopRanks" of {_P}) to {_P}
+
+
+function lsStatsGUI(p: player):
+    set metadata tag "lsShopStats" of {_P} to chest inventory with 6 rows named "&6Lava Shards Shop"
+
+    set slot 0 of metadata tag "lsShopStats" of {_P} to glowing diamond pickaxe named "&b&lTOOLS" with lore " &b➥ &fClick to Open"
+    set slot 1 of metadata tag "lsShopStats" of {_P} to gray stained glass pane named " "
+
+    set slot 9 of metadata tag "lsShopStats" of {_P} to glowing blaze rod named "&6&lSELLWANDS" with lore " &b➥ &fClick to Open"
+    set slot 10 of metadata tag "lsShopStats" of {_P} to gray stained glass pane named " "
+
+    set slot 18 of metadata tag "lsShopStats" of {_P} to glowing paper named "&d&lRANKS" with lore " &b➥ &fClick to Open"
+    set slot 19 of metadata tag "lsShopStats" of {_P} to gray stained glass pane named " "
+    
+    set slot 27 of metadata tag "lsShopStats" of {_P} to glowing magenta glazed terracotta named "&9&lPERSONAL STATS" with lore " &b➥ &fClick to Open"
+    set slot 28 of metadata tag "lsShopStats" of {_P} to glowing green glass pane named " "
+
+    set slot (integers between 36 and 44) of metadata tag "lsShopStats" of {_P} to blue stained glass pane named " "
+
+    if {lavashards::balance::%{_P}'s uuid%} is set:
+        if {lavashards::balance::%{_P}'s uuid%} is 0:
+            set slot 49 of metadata tag "lsShopStats" of {_P} to emerald named "&d&lLava Shards Balance:" with lore " &b➥ &dNone :("
+        if {lavashards::balance::%{_P}'s uuid%} >= 1:
+            set slot 49 of metadata tag "lsShopStats" of {_P} to emerald named "&d&lLava Shards Balance:" with lore " &b➥ &d%{lavashards::balance::%{_P}'s uuid%}% ☢"
+    if {lavashards::balance::%{_P}'s uuid%} is not set:
+        set {lavashards::balance::%{_P}'s uuid%} to 0
+        set slot 49 of metadata tag "lsShopStats" of {_P} to emerald named "&d&lLava Shards Balance:" with lore " &b➥ &dNone :("
+
+    open (metadata tag "lsShopStats" of {_P}) to {_P}
+
+
+
+
+            # Command
+command /lavashardshop:
+    aliases: /lsshop, /shardshop, /tokenshop
+    trigger:
+        lsShopGUI(player)
+
+
+            # Events
+on inventory click:
+    if event-inventory = (metadata tag "lsShop" of player):
+        cancel event
+        if index of event-slot is 10:
+            lsToolsGUI(player)
+
+            # Tools Portion
+on inventory click:
+    if event-inventory = (metadata tag "lsShopTools" of player):
+        cancel event
+        if index of event-slot is 9:
+            lsSellWandGUI(player)
+        if index of event-slot is 18:
+            lsRanksGUI(player)
+        if index of event-slot is 27:
+            lsStatsGUI(player)
+    
+
+            # SellWand Portion
+on inventory click:
+    if event-inventory = (metadata tag "lsShopSW" of player):
+        cancel event
+        if index of event-slot is 0:
+            lsToolsGUI(player)
+        if index of event-slot is 18:
+            lsRanksGUI(player)
+        if index of event-slot is 27:
+            lsStatsGUI(player)
+
+            
+            # Ranks Portion
+on inventory click:
+    if event-inventory = (metadata tag "lsShopRanks" of player):
+        cancel event
+        if index of event-slot is 0:
+            lsToolsGUI(player)
+        if index of event-slot is 9:
+            lsSellWandGUI(player)
+        if index of event-slot is 27:
+            lsStatsGUI(player)
+
+            
+            # Stats Portion
+on inventory click:
+    if event-inventory = (metadata tag "lsShopStats" of player):
+        cancel event
+        if index of event-slot is 0:
+            lsToolsGUI(player)
+        if index of event-slot is 9:
+            lsSellWandGUI(player)
+        if index of event-slot is 18:
+            lsRanksGUI(player)
