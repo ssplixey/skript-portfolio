@@ -1,0 +1,64 @@
+# This skript uses a metadata tag function to display said GUI. This can be used in multiple ways and is easy to change!
+
+# Daily Reward Skript
+# Main Developer: splixey#8825
+
+function dailyrewardGUI(p: player):
+    set metadata tag "DailyRewardGUI" of {_P} to chest inventory with 3 rows named "&6&lᴅᴀɪʟʏ ʀᴇᴡᴀʀᴅ"
+    if {dailyreward::%{_P}'s uuid%} is set:
+        set slot 13 of metadata tag "DailyRewardGUI" of {_P} to barrier named "&c&lDaily Reward" with lore "&4You already claimed this today!" and "  &b• &fCooldown: &c%{dailyreward::%{_P}'s uuid%}% minute(s)." and "" and "&dReward:" and "  &b• &a$2,500" and "  &b• &d500 Tokens"
+    if {dailyreward::%{_P}'s uuid%} is not set:
+        set slot 13 of metadata tag "DailyRewardGUI" of {_P} to glowing minecart with chest named "&c&lDaily Reward" with lore "&dReward:" and "  &b• &a$2,500" and "  &b• &d500 Shards"
+    if {_P} has permission "admin.resetdailyreward":
+        if {dailyreward::%{_P}'s uuid%} is set:
+            set slot 26 of metadata tag "DailyRewardGUI" of {_P} to glowing arrow named "&b&lReset Daily Reward" with lore "&dLeft-Click:" and "  &b• Resets your daily reward cooldown."
+    open (metadata tag "DailyRewardGUI" of {_P}) to {_P}
+
+command /daily:
+    aliases: /dailyreward
+    trigger:
+        dailyrewardGUI(player)
+
+on inventory click:
+    if event-inventory = (metadata tag "DailyRewardGUI" of player):
+        cancel event
+        if index of event-slot = 13:
+            if {dailyreward::%player's uuid%} is set:
+                send "&4&lHey! &7You already used this today!"
+                close player's inventory
+            if {dailyreward::%player's uuid%} is not set:
+                add 2500 to player's balance
+                add 500 to {shards::balance::%player's uuid%}
+                send "&a$2,500 has been added to your account."
+                send "&cLavaShards &8» &7500 shards has been added to your shard balance by &cConsole&7. /shards"
+                set {dailyreward::%player's uuid%} to 1440
+                close player's inventory
+                dailyrewardGUI(player)
+        if index of event-slot is 26:
+            if player has permission "admin.resetdailyreward":
+                if {dailyreward::%player's uuid%} is set:
+                    delete {dailyreward::%player's uuid%}
+                    send "&aReset your daily reward cooldown."
+                    close player's inventory
+                    dailyrewardGUI(player)
+
+every 1 minute:
+    loop all players:
+        if {dailyreward::%loop-player's uuid%} is set:
+            remove 1 from {dailyreward::%loop-player's uuid%}
+
+every 3000 ticks:
+    loop all players:
+        if {dailyreward::%loop-player's uuid%} = 0:
+            delete {dailyreward::%loop-player's uuid%} 
+
+command /dailyreset [<player>]:
+    permission: admin.dailyreset
+    permission message: &4&lHey! &7You do not have permission to use this command.
+    trigger:
+        if arg-1 is set:
+            delete {dailyreward::%arg-1's uuid%}
+            send "&aReset %arg-1%'s daily reward cooldown."
+        if arg-1 is not set:
+            delete {dailyreward::%player's uuid%}
+            send "&aReset %player%'s daily reward cooldown."
