@@ -1,7 +1,7 @@
 # This type of skript is most commonly used for a Prison or Generator server, this provides different accessabilities to upgrading certain enchants on your pickaxe!
 
 # Upgrade Pickaxe/ Miner Pickaxe
-# Main Developer: splixey#8825
+# Main Developer: splixey#8825 
 
 options:
     p: &7&lMiner &8»
