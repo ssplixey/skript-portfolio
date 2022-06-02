@@ -1,0 +1,227 @@
+# This type of skript is most commonly used for a Prison or Generator server, this provides different accessabilities to upgrading certain enchants on your pickaxe!
+
+# Upgrade Pickaxe/ Miner Pickaxe
+# Main Developer: splixey#8825
+
+options:
+    p: &7&lMiner &8»
+
+            # Function
+function givePick(p: player):
+    if {claimedPick::%{_P}'s uuid%} is set:
+        send "&4Hey! &7You already claimed your mining pick!" to {_P}
+    if {claimedPick::%{_P}'s uuid%} is not set:
+        add 1 to {picknumber}
+        set {picknumber::%{_P}'s uuid%} to ({picknumber} parsed as integer)
+        set {blocksmined::%{_P}'s uuid%} to 0
+        set {efficiencylvl::%{_P}'s uuid%} to 0
+        set {fortunelvl::%{_P}'s uuid%} to 0 
+        set {tokengrablvl::%{_P}'s uuid%} to 0
+        give {_P} glowing wooden pickaxe named "&c&l%{_P}%'s Miner Pickaxe &7[%{blocksmined::%{_P}'s uuid%}%]" with lore " " and "&fThis is your mining" and "&fpickaxe, don't lose it!" and " " and "&7Efficiency: %{efficiencylvl::%{_P}'s uuid%}%" and "&7Fortune: %{fortunelvl::%{_P}'s uuid%}%" and "&7Token Grabber: %{tokengrablvl::%{_P}'s uuid%}%" and " " and "&bRight-Click while holding" and "&byour pickaxe to open" and "&bthe enchantment menu." and " " and "&8##%{picknumber::%{_P}'s uuid%}%"
+        set {claimedPick::%{_P}'s uuid%} to true
+
+function upgradePick(p: player):
+    give {_P} glowing wooden pickaxe named "&c&l%{_P}%'s Miner Pickaxe &7[%{blocksmined::%{_P}'s uuid%}%]" with lore " " and "&fThis is your mining" and "&fpickaxe, don't lose it!" and " " and "&7Efficiency: %{efficiencylvl::%{_P}'s uuid%}%" and "&7Fortune: %{fortunelvl::%{_P}'s uuid%}%" and "&7Token Grabber: %{tokengrablvl::%{_P}'s uuid%}%" and " " and "&bRight-Click while holding" and "&byour pickaxe to open" and "&bthe enchantment menu." and " " and "&8##%{picknumber::%{_P}'s uuid%}%"
+
+
+function pickEnchant(p: player):
+    if name of {_P}'s held item contains "&c&l%{_P}%'s Miner Pickaxe &7[":
+        set metadata tag "PickEnchant" of {_P} to chest inventory with 5 rows named "&c&lPickaxe Enchantment"
+        if {efficiencylvl::%{_P}'s uuid%} is 10:
+            set slot 20 of metadata tag "PickEnchant" of {_P} to glowing diamond pickaxe named "&9&lEfficiency" with lore "&b➥ &fCurrent Level: &7%{efficiencylvl::%{_P}'s uuid%}%/10", "&b➥ &4This enchantment is maxed out."
+        if {efficiencylvl::%{_P}'s uuid%} < 10:
+            set slot 20 of metadata tag "PickEnchant" of {_P} to diamond pickaxe named "&9&lEfficiency" with lore "&b➥ &fCurrent Level: &7%{efficiencylvl::%{_P}'s uuid%}%/10", "&b➥ &fPrice: &d5 Shards PER Level", "&b➥ &fClick to Upgrade by 1"
+    
+        if {fortunelvl::%{_P}'s uuid%} is 3:
+            set slot 22 of metadata tag "PickEnchant" of {_P} to glowing diamond named "&4&lFortune" with lore "&b➥ &fCurrent Level: &7%{fortunelvl::%{_P}'s uuid%}%/3", "&b➥ &4This enchantment is maxed out."
+        if {fortunelvl::%{_P}'s uuid%} < 3:
+            set slot 22 of metadata tag "PickEnchant" of {_P} to diamond named "&4&lFortune" with lore "&b➥ &fCurrent Level: &7%{fortunelvl::%{_P}'s uuid%}%/3", "&b➥ &fPrice: &d10 Shards PER Level", "&b➥ &fClick to Upgrade by 1"
+    
+        if {tokengrablvl::%{_P}'s uuid%} is 20:
+            set slot 24 of metadata tag "PickEnchant" of {_P} to glowing sunflower named "&d&l Shard Grabber" with lore "&b➥ &fCurrent Level: &7%{tokengrablvl::%{_P}'s uuid%}%/20", "&b➥ &fPrice: &4This enchantment is maxed out."
+        if {tokengrablvl::%{_P}'s uuid%} < 20:
+            set slot 24 of metadata tag "PickEnchant" of {_P} to sunflower named "&d&l Shard Grabber" with lore "&b➥ &fCurrent Level: &7%{tokengrablvl::%{_P}'s uuid%}%/20", "&b➥ &fPrice: &d25 Shards PER Level", "&b➥ &fClick to Upgrade by 1"
+    
+        set slot 4 of metadata tag "PickEnchant" of {_P} to emerald named "&e&lCurrent Enchantments:" with lore " &b➥ &fEfficiency &8~ &f%{efficiencylvl::%{_P}'s uuid%}%/10", " &b➥ &fFortune &8~ &f%{fortunelvl::%{_P}'s uuid%}%/3", " &b➥ &fShard Grabber &8~ &f%{tokengrablvl::%{_P}'s uuid%}%/20"
+        set slot (integers between 0 and 3) of metadata tag "PickEnchant" of {_P} to light blue stained glass pane named " "
+        set slot (integers between 5 and 8) of metadata tag "PickEnchant" of {_P} to light blue stained glass pane named " "
+        set slot 9, 18, 27, 36 of metadata tag "PickEnchant" of {_P} to light blue stained glass pane named " "
+        set slot 17, 26, 35, 45 of metadata tag "PickEnchant" of {_P} to light blue stained glass pane named " "
+        
+        set slot 40 of metadata tag "PickEnchant" of {_P} to barrier named "&4&lClose Pickaxe Enchantments Menu" with lore " &b➥ &fClick to Close"
+        set slot (integers between 36 and 39) of metadata tag "PickEnchant" of {_P} to light blue stained glass pane named " "
+        set slot (integers between 41 and 45) of metadata tag "PickEnchant" of {_P} to light blue stained glass pane named " "
+        open (metadata tag "PickEnchant" of {_P}) to {_P}
+
+
+            # Events
+on right click:
+    if name of player's held item contains "&c&l%player%'s Miner Pickaxe &7[":
+        if player is sneaking:
+            pickEnchant(player)
+
+on inventory click:
+    if event-inventory = (metadata tag "PickEnchant" of player):
+        cancel event
+        if index of event-slot is 20:
+            if {efficiencylvl::%player's uuid%} = 10:
+                cancel event
+                send "&4&lWhoops! &7This enchant is already maxed out! &8%{efficiencylvl::%player's uuid%}%/10"
+                close player's inventory
+                pickEnchant(player)
+            if {efficiencylvl::%player's uuid%} < 10:
+                if {shards::balance::%player's uuid%} >= 5:
+                    add 1 to {efficiencylvl::%player's uuid%}
+                    remove 5 from {shards::balance::%player's uuid%}
+                    send "&a&lSuccess! &7You upgraded your efficiency enchant by 1! &8%{efficiencylvl::%player's uuid%}%/10"
+                    close player's inventory
+                    pickEnchant(player)
+                    remove held item from player's inventory
+                    upgradePick(player)
+                else if {shards::balance::%player's uuid%} < 5:
+                    send "&4&lWhoops! &7Insufficient Balance!"
+
+        if index of event-slot is 22:
+            if {fortunelvl::%player's uuid%} = 3:
+                cancel event
+                send "&4&lWhoops! &7This enchant is already maxed out! &8%{fortunelvl::%player's uuid%}%/3"
+                close player's inventory
+                pickEnchant(player)
+            if {fortunelvl::%player's uuid%} < 3:
+                if {shards::balance::%player's uuid%} >= 10:
+                    add 1 to {fortunelvl::%player's uuid%}
+                    remove 10 from {shards::balance::%player's uuid%}
+                    send "&a&lSuccess! &7You upgraded your fortune enchant by 1! &8%{fortunelvl::%player's uuid%}%/3"
+                    close player's inventory
+                    pickEnchant(player)
+                    remove held item from player's inventory
+                    upgradePick(player)
+                else if {shards::balance::%player's uuid%} < 10:
+                    send "&4&lWhoops! &7Insufficient Balance!"
+        
+        if index of event-slot is 24:
+            if {tokengrablvl::%player's uuid%} = 20:
+                cancel event
+                send "&4&lWhoops! &7This enchant is already maxed out! &8%{tokengrablvl::%player's uuid%}%/20"
+                close player's inventory
+                pickEnchant(player)
+            if {tokengrablvl::%player's uuid%} < 20:
+                if {shards::balance::%player's uuid%} >= 25:
+                    add 1 to {tokengrablvl::%player's uuid%}
+                    remove 25 from {shards::balance::%player's uuid%}
+                    send "&a&lSuccess! &7You upgrade your shard grabber enchant by 1! &8%{tokengrablvl::%player's uuid%}%/20"
+                    close player's inventory
+                    pickEnchant(player)
+                    remove held item from player's inventory
+                    upgradePick(player)
+                else if {shards::balance::%player's uuid%} <25:
+                    send "&4&lWhoops! &7Insufficient Balance!"
+        
+        if index of event-slot is 40:
+            close player's inventory
+
+
+            # Commands
+command /minerpickaxe:
+    trigger:
+        givePick(player)
+
+
+command /resetminerpickaxe [<offline player>]:
+    aliases: /resetminerpick, /resetminer, /resetpick
+    permission: admin.resetminerpickaxe
+    permission message: &4&lHey! &7You do not have permission to use this command.
+    trigger:
+        if arg-1 is set:
+            if {claimedPick::%arg-1's uuid%} is set:
+                delete {claimedPick::%arg-1's uuid%}
+                send "{@p} &aReset %arg-1%'s &cclaimedPick&a variable."
+            else if {claimedPick::%arg-1's uuid%} is not set:
+                send "{@p} &cIt appears this player never claimed a pickaxe."
+                send "           &7Have them run /minerpickaxe"
+
+
+command /setpicknumber [<int>]:
+    aliases: /setpickaxenumber, /setpicknum 
+    permission: admin.setpickaxenumber
+    permission message: &4&lHey! &7You do not have permission to use this command.
+    trigger:
+        if arg-1 is set:
+            set {picknumber} to arg-1
+            send "{@p} &aSet the &cpickNumber&a variable to %arg-1%."
+        if arg-1 is not set:
+            send "&4&lHey! &7You must specify a value."
+            
+
+on break:
+    if name of player's held item contains "&c&l%player%'s Miner Pickaxe &7[":
+        add 1 to {blocksmined::%player's uuid%}
+        remove held item from player's inventory
+        give player glowing wooden pickaxe named "&c&l%player%'s Miner Pickaxe &7[%{blocksmined::%player's uuid%}%]" with lore " " and "&fThis is your mining" and "&fpickaxe, don't lose it!" and " " and "&7Efficiency: %{efficiencylvl::%player's uuid%}%" and "&7Fortune: %{fortunelvl::%player's uuid%}%" and "&7Token Grabber: %{tokengrablvl::%player's uuid%}%" and " " and "&bRight-Click while holding" and "&byour pickaxe to open" and "&bthe enchantment menu." and " " and "&8##%{picknumber::%player's uuid%}%"
+
+
+command /setpickenchant [<offline player>] [<text>] [<int>]:
+    aliases: /pickenchant, /setpickaxeenchant, /pickaxeenchant
+    permission: admin.setpickenchant
+    permission message: &4&lHey! &7You do not have permission to use this command.
+    trigger:
+        if arg-1 is set:
+            if arg-2 is set:
+                if arg-3 is set:
+                    if arg-2 is "efficiency" or "eff" or "fortune" or "shardgrab" or "lsgrabber" or "lsgrab" or "shardgrabber" or "options" or "help":
+                        if arg-2 is "efficiency" or "eff":
+                            set {efficiencylvl::%arg-1's uuid%} to arg-3
+                            send "{@p} &aSet %arg-1%'s &cefficiencyLVL &avariable to %arg-3%."
+                        if arg-2 is "fortune":
+                            if arg-3 > 3:
+                                if {enchantbypass::%player's uuid%} = false:
+                                    send "&c&lHey! &7This is above the enchantment limit. To use this please do /enchantbypass."
+                                else if {enchantbypass::%player's uuid%} = true:
+                                    set {fortunelvl::%arg-1's uuid%} to arg-3
+                                    send "{@p} &aSet %arg-1%'s &cfortuneLVL &avariable to %arg-3%."
+                            else if arg-3 <= 3: 
+                                set {fortunelvl::%arg-1's uuid%} to arg-3
+                                send "{@p} &aSet %arg-1%'s &cfortuneLVL &avariable to %arg-3%."
+                        if arg-2 is "shardgrab" or "shardgrabber" or "lsgrabber" or "lsgrab":
+                            set {tokengrablvl::%arg-1's uuid%} to arg-3
+                            send "{@p} &aSet %arg-1%'s &cshardgrabLVL &avariable to %arg-3%."
+                        if arg-2 is "help" or "options":
+                            send ""
+                            send "&b&lShowing options for Setting Pickaxe Enchants:"
+                            send " &b➥ &fEfficiency/Eff &8~ &fThe dig speed."
+                            send " &b➥ &fFortune &8~ &fThe amount of items a player gets."
+                            send " &b➥ &fShardGrabber &8~ &fTo get shards while mining."
+                            send ""
+                            send "&b&lShowing max values for Setting Pickaxe Enchants:"
+                            send " &b➥ &fEfficiency/Eff &8~ &fMax of &c10"
+                            send " &b➥ &fFortune &8~ &fMax of &c3"
+                            send " &b➥ &fShardGrabber &8~ &fMax of &c20"
+                            send ""
+                    if arg-2 is not "efficiency" or "eff" or "fortune" or "shardgrab" or "lsgrabber" or "lsgrab" or "shardgrabber" or "help" or "options":
+                        send ""
+                        send "&b&lShowing options for Setting Pickaxe Enchants:"
+                        send " &b➥ &fEfficiency/Eff &8~ &fThe dig speed."
+                        send " &b➥ &fFortune &8~ &fThe amount of items a player gets."
+                        send " &b➥ &fShardGrabber &8~ &fTo get shards while mining."
+                        send ""
+                        send "&b&lShowing max values for Setting Pickaxe Enchants:"
+                        send " &b➥ &fEfficiency/Eff &8~ &fMax of &c10"
+                        send " &b➥ &fFortune &8~ &fMax of &c3"
+                        send " &b➥ &fShardGrabber &8~ &fMax of &c20"
+                        send ""
+                if arg-3 is not set:
+                    send "&4&lHey! &7You must specify a value."
+            if arg-2 is not set:
+                send ""
+                send "&b&lShowing options for Setting Pickaxe Enchants:"
+                send " &b➥ &fEfficiency/Eff &8~ &fThe dig speed."
+                send " &b➥ &fFortune &8~ &fThe amount of items a player gets."
+                send " &b➥ &fShardGrabber &8~ &fTo get shards while mining."
+                send ""
+                send "&b&lShowing max values for Setting Pickaxe Enchants:"
+                send " &b➥ &fEfficiency/Eff &8~ &fMax of &c10"
+                send " &b➥ &fFortune &8~ &fMax of &c3"
+                send " &b➥ &fShardGrabber &8~ &fMax of &c20"
+                send "" 
+        if arg-1 is not set:
+            send "&4&lHey! &7You must specify a player."
