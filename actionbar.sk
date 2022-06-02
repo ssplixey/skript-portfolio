@@ -1,0 +1,36 @@
+# This is a very easy type of skript to make, it uses SkRayfall to send a "action bar" to the specified players (in this case all players) to display a guide.
+
+options:
+    p: &a&lTIP:&r
+
+command /allactionbar [<text>]:
+    permission: admin.actionbar
+    permission message: &4&lHey! &7You do not have permission to use this command.
+    trigger:
+        if arg-1 is set:
+            send action bar arg-1 to all players
+        if arg-1 is not set:
+            send "&4&lWhoops! &7Please specify a message!"
+
+command /playeractionbar [<player>] [<text>]:
+    permission: admin.actionbar
+    permission message: &4&lHey! &7You do not have permission to use this command.
+    trigger:
+        if arg-1 is set:
+            if arg-2 is set:
+                send action bar arg-2 to arg-1
+            if arg-2 is not set:
+                send "&4&lWhoops! &7Please specify a message!"
+        if arg-1 is not set:
+            send "&4&lWhoops! &7Please specify a player!"
+
+# Requires: settings.sk
+# TIPS VAR: {settings::tiptoggle::%player's uuid%}
+every 5 seconds:
+    loop all players:
+        if {settings::tiptoggle::%loop-player's uuid%} is set:
+            set {AB} to random integer between 1 and 10
+            if {AB} is a random integer between 1 and 5:
+                send action bar "{@p} &7Make sure to join the discord! &a/discord" to loop-player
+            else if {AB} is a random integer between 6 and 10:
+                send action bar "{@p} &7Check out our special perks by supporting us! &a/buy" to loop-player
