@@ -1,0 +1,63 @@
+command /staffchat [<text>]:
+    aliases: /sc
+    permission: player.staffchat
+    permission message: &c&lHey! &7You do not have permission to use this command.
+    trigger:
+        if {staffchat::toggle::%player's uuid%} is set:
+            if {staffchat::toggle::%player's uuid%} = "&aEnabled":
+                if arg-1 is set:
+                    loop all players:
+                        if {staffchat::toggle::%loop-player's uuid%} = "&aEnabled":
+                            send "&7[SC] &a%player%: &b%arg-1%" 
+                        else if {staffchat::toggle::%loop-player's uuid%} = "&cDisabled":
+                            send "&cNew Chat"
+                if arg-1 is not set:
+                    send "&cYou must specify a message to send."
+            if {staffchat::toggle::%player's uuid%} = "&cDisabled":
+                send "&cYou must enable staff chat using &a/staffchattoggle&c."
+        else if {staffchat::toggle::%player's uuid%} is not set:
+            send "&cYou must enabled the staff chat module using &a/staffchattoggle&c."
+
+function staffchatToggle(p: player):
+    set metadata tag "StaffChat" of {_P} to dispenser inventory named "&0Staff Chat Toggle"
+
+    if {staffchat::toggle::%{_P}'s uuid%} is not set:
+        set slot 4 of metadata tag "StaffChat" of {_P} to minecart with chest named "&5&lStaff Chat" with lore "" and "&fClick to Enable Module"
+    else if {staffchat::toggle::%{_P}'s uuid%} = "&aEnabled":
+        set slot 4 of metadata tag "StaffChat" of {_P} to minecart with chest named "&5&lStaff Chat" with lore "" and "&f➥ &bCurrent Status: %{staffchat::toggle::%{_P}'s uuid%}%" and "&6Click to &cDisable &6Staff Chat"
+    else if {staffchat::toggle::%{_P}'s uuid%} = "&cDisabled":
+        set slot 4 of metadata tag "StaffChat" of {_P} to minecart with chest named "&5&lStaff Chat" with lore "" and "&f➥ &bCurrent Status: %{staffchat::toggle::%{_P}'s uuid%}%" and "&6Click to &aEnable &6Staff Chat"
+    
+    open (metadata tag "StaffChat" of {_P}) to {_P}
+
+function updatestaffchatToggle(p: player):
+    if {staffchat::toggle::%{_P}'s uuid%} is not set:
+        set slot 4 of metadata tag "StaffChat" of {_P} to minecart with chest named "&5&lStaff Chat" with lore "" and "&f➥ &bCurrent Status: %{staffchat::toggle::%{_P}'s uuid%}%" and "&fClick to Enable Module"
+    else if {staffchat::toggle::%{_P}'s uuid%} = "&aEnabled":
+        set slot 4 of metadata tag "StaffChat" of {_P} to minecart with chest named "&5&lStaff Chat" with lore "" and "&f➥ &bCurrent Status: %{staffchat::toggle::%{_P}'s uuid%}%" and "&6Click to &cDisable &6Staff Chat"
+    else if {staffchat::toggle::%{_P}'s uuid%} = "&cDisabled":
+        set slot 4 of metadata tag "StaffChat" of {_P} to minecart with chest named "&5&lStaff Chat" with lore "" and "&f➥ &bCurrent Status: %{staffchat::toggle::%{_P}'s uuid%}%" and "&6Click to &aEnable &6Staff Chat"
+
+command /staffchattoggle:
+    aliases: /sctoggle
+    permission: player.staffchat.toggle
+    permission message: &c&lHey! &7You do not have permission to use this command.
+    trigger:
+        staffchatToggle(player)
+
+on inventory click:
+    if event-inventory = (metadata tag "StaffChat" of player):
+        cancel event
+        if index of event-slot = 4:
+            if {staffchat::toggle::%player's uuid%} is not set:
+                set {staffchat::toggle::%player's uuid%} to "&cDisabled"
+            else if {staffchat::toggle::%player's uuid%} = "&aEnabled":
+                set {staffchat::toggle::%player's uuid%} to "&cDisabled"
+            else if {staffchat::toggle::%player's uuid%} = "&cDisabled":
+                set {staffchat::toggle::%player's uuid%} to "&aEnabled"
+            updatestaffchatToggle(player)
+
+command /scenable:
+    executable by: console
+    trigger:
+        set {staffchat::toggle::%player's uuid%} to "&aEnabled"
