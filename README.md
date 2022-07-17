@@ -6,6 +6,7 @@
    • May not be finished.
    • May not be tested fully.
    • May have minor bugs.
+   • Duplicates
 
 ⚡ Please also note:
    • Not all of my skripts are displayed. (view line 25)
