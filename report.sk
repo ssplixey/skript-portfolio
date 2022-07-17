@@ -1,0 +1,72 @@
+options:
+    p: &c&lREPORT &8»
+    tp: &c&lTOGGLE REPORT &8»
+
+function openToggleReport(p: player):
+    set metadata tag "toggleReport" of {_P} to chest inventory with 3 rows named "&8&lToggle Reports"
+    if {togglereports::%{_P}'s uuid%} is set:
+        if {togglereports::%{_P}'s uuid%} = "&aEnabled":
+            set slot 13 of metadata tag "toggleReport" of {_P} to glowing bell named "&5&lREPORT MESSAGES &7(&aEnabled&7)" with lore "&6Status: %{togglereports::%{_P}'s uuid%}%" and "" and "&fClick to toggle the" and "&fstatus of this module!"
+        if {togglereports::%{_P}'s uuid%} = "&cDisabled":
+            set slot 13 of metadata tag "toggleReport" of {_P} to bell named "&5&lREPORT MESSAGES &7(&cDisabled&7)" with lore "" and "&6Status: %{togglereports::%{_P}'s uuid%}%" and "" and "&fClick to toggle the" and "&fstatus of this module!"
+    if {togglereports::%{_P}'s uuid%} is not set:
+        set slot 13 of metadata tag "toggleReport" of {_P} to glowing bedrock named "&5&lENABLE PERSONAL PLUGIN" with lore "" and "&fThis module is not" and "&fset yet. Click to" and "&fenable this!"
+    open (metadata tag "toggleReport" of {_P}) to {_P}
+
+            
+
+command /report [<player>] [<text>]:
+    cooldown: 10 seconds
+    cooldown message: &c&lHey! &7You do not have permission to use this command.
+    cooldown bypass: Splixey
+    trigger:
+        if arg-1 is set:
+            if arg-2 is set:
+                send "{@p} &7Thanks! Our staff team will look into it soon!"
+                loop all players:
+                    if {togglereports::%loop-player's uuid%} is "&aEnabled":
+                        send "" to loop-player
+                        send "&b&m-----------------------&r &c&lREPORT &b&m-----------------------" to loop-player
+                        send "" to loop-player
+                        send "&4[&c%now%&4]" to loop-player
+                        send "{@p} &aReporter: %player% &8| &bAgainst: %arg-1%" to loop-player
+                        send "&c&lREASON &8»&b %arg-2%" to loop-player
+                        send "" to loop-player
+                        send "&b&m-------------------------------------------------------"
+                        send action bar "&a&lTIP: &7Do /togglereport to cancel report messages!" to loop-player
+                        send "" to loop-player
+                        wait 3 seconds
+                        send action bar "&0[&c&lREPORTS&0] &bCheck Chat" to loop-player
+                    if {togglereports::%loop-player's uuid%} is "&cDisabled":
+                        send action bar "&0[&c&lREPORTS DISABLED&0] &bNew Report" to loop-player
+            if arg-2 is not set:
+                send "&c&lHey! &7Please specify a reason for your report!"
+        if arg-1 is not set:
+            send "&c&lHey! &7Please specify a player to report!"
+
+command /togglereport:
+    permission: staff.confirmed
+    permission message: &c&lHey! &7You do not have permission to use this command.
+    trigger:
+        openToggleReport(player)
+
+on inventory click:
+    if event-inventory = (metadata tag "toggleReport" of player):
+        cancel event
+        if index of event-slot = 13:
+            if {togglereports::%player's uuid%} is not set:
+                set {togglereports::%player's uuid%} to "&aEnabled"
+                send "{@tp} &7Set your toggle status to: &aEnabled"
+                close player's inventory
+                openToggleReport(player)
+            if {togglereports::%player's uuid%} is set:
+                if {togglereports::%player's uuid%} = "&aEnabled":
+                    set {togglereports::%player's uuid%} to "&cDisabled"
+                    send "{@tp} &7Set your toggle status to: &cDisabled"
+                    close player's inventory
+                    openToggleReport(player)
+                else if {togglereports::%player's uuid%} = "&cDisabled":
+                    set {togglereports::%player's uuid%} to "&aEnabled"
+                    send "{@tp} &7Set your toggle status to: &aEnabled"
+                    close player's inventory
+                    openToggleReport(player)
