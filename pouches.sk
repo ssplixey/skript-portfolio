@@ -1,0 +1,99 @@
+options:
+    moneypouch: &c&lMONEYPOUCH &8»
+    shardpouch: &c&lSHARDPOUCH &8»
+    pouch: &c&lPOUCHES &8»
+    symbol: ❋
+
+on tab complete of "/pouch":
+    set tab completions for position 1 to "give" and "reload"
+    set tab completions for position 3 to "money" and "shards"
+
+command /pouch [<text>] [<player>] [<text>] [<int>]:
+    permission: admin.pouch
+    permission message: &c&lHey! &7You do not have permission to use this command.
+    trigger:
+        if arg-1 is set:
+            if arg-1 is "give" or "reload":
+                if arg-1 is "give":
+                    if arg-2 is set:
+                        if arg-3 is set:
+                            if arg-4 is set:
+                                if arg-3 is "money" or "shards":
+                                    
+                                    if arg-3 is "money":
+                                        loop arg-4 times:
+                                            give arg-2 ender chest named "&bMoney Pouch" with lore " &8➥ &6Reward: &f$10k - $100k" and "" and "&7(&fRight-Click&7) &fOpen" and "&7(&fShift + Right-Click&7) &fOpen All"
+                                        send "{@moneypouch} &aYou gave &6%arg-2% &a%arg-4% money pouches."
+                                        send "&aYou were given %arg-4% money pouches." to arg-2
+                                    if arg-3 is "shards":
+                                        loop arg-4 times:
+                                            give arg-2 barrel named "&bShards Pouch" with lore " &8➥ &6Reward: &f{@symbol}1k - {@symbol}20k" and "" and "&7(&fRight-Click&7) &fOpen" and "&7(&fShift + Right-Click&7) &fOpen All"
+                                        send "{@shardpouch} &aYou gave &6%arg-2%&a %arg-4% shard pouches."
+                                        send "&aYou were given %arg-4% shard pouches." to arg-2
+                                if arg-3 != "money" or "shards":
+                                    send "&6Valid Currencies: &fMoney&a, &fShards"
+                            if arg-4 is not set:
+                                send "&cYou must specify an amount to give."
+                        if arg-3 is not set:
+                            send "&6Valid Currencies: &fMoney&a, &fShards"
+                    if arg-2 is not set:
+                        send "&cYou must specify a player."
+                
+                if arg-1 is "reload":
+                    if player has permission "admin.pouch.reload":
+                        execute player command "/sk reload pouches.sk"
+                        loop all players:
+                            if loop-player has permission "staff":
+                                send "{@pouch} &7Configuration reloaded." to loop-player
+            
+            if arg-1 is not "give" or "reload":
+                send "&6Valid Entries: &fGive&a, &fReload"
+        if arg-1 is not set:
+            send "&6Valid Entries: &fGive&a, &fReload"
+
+
+function decimalpouches(n: number) :: text:
+  set {_prefixes} to "Qn,18:Qd,15:T,12:B,9:M,6:K,3"
+  loop {_prefixes} split at ":":
+    set {_s::*} to loop-value split at ","
+    {_n} >= 10 ^ {_s::2} parsed as number
+    return "%{_n} / 10 ^ {_s::2} parsed as number%%{_s::1}%"
+  return "%{_n}%"
+
+on right click:
+    if name of player's held item contains "&bMoney Pouch":
+        cancel event
+        if player isn't sneaking:
+            set {_result} to random integer between 10000 and 100000
+            add {_result} to player's balance
+            remove 1 ender chest named "&bMoney Pouch" from player's inventory
+            send "&a$%decimalpouches({_result})% has been added to your account."
+        else:
+            if player has permission "player.pouch.claimMultiple":
+                set {_am} to amount of player's held item in player's inventory
+                loop {_am} times:
+                    set {_result} to random integer between 10000 and 100000
+                    add {_result} to {_finalresult}
+                add {_finalresult} to player's balance
+                remove all ender chest named "&bMoney Pouch" from player's inventory
+                send "&a$%decimalpouches({_finalresult})% has been addd to your account."
+            else if player doesn't have permission "player.pouch.claimMultiple":
+                send "&cYou must have a rank to open multiple pouches!"
+    if name of player's held item contains "&bShards Pouch":
+        cancel event
+        if player isn't sneaking:
+            set {_result} to random integer between 1000 and 20000
+            add {_result} to {shards::balance::%player's uuid%}
+            remove 1 barrel named "&bShards Pouch" from player's inventory
+            send "&a{@symbol}%decimalpouches({_result})% has been addd to your account."
+        else:
+            if player has permission "player.pouch.claimMultiple":
+                set {_am} to amount of player's held item in player's inventory
+                set {_result} to random integer between 1000 and 20000
+                set {_result} to ({_result}*{_am})
+                add {_result} to {shards::balance::%player's uuid%}
+                remove all barrel named "&bShards Pouch" from player's inventory
+                send "&a{@symbol}%decimalpouches({_result})% has been addd to your account."
+            else if player doesn't have permission "player.pouch.claimMultiple":
+                send "&cYou must have a rank to open multiple pouches!"
+        
