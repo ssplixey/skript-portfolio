@@ -1,0 +1,170 @@
+options:
+    p: &d&lLOOTBOX &8|
+    file: lootbox.sk
+    perm: &cYou do not have permission to use this command.
+    symbol: ❋
+
+function lootbox(t: text, p: player, i: int):
+    if {_T} = "common":
+        loop {_I} times:
+            give {_P} respawn anchor named "&7Common Lootbox &f(Place)" with lore "&fThe common lootbox is one of," and "&fif not the most commonly" and "&fopened lootbox on Dropified" and "" and "&6Number of Rewards: &f1" and "" and "&a(Left-Click) &fPreview Rewards" and "&a(Place) &fOpen Lootbox"
+        if {_I} > 1:
+            send "&aYou have been given &c%{_I}%&a common lootboxes!" to {_P}
+        if {_I} = 1:
+            send "&aYou have been given &c%{_I}%&a common lootbox!" to {_P}
+
+    if {_T} = "uncommon":
+        loop {_I} times:
+            give {_P} respawn anchor named "&aUncommon Lootbox &f(Place)" with lore "" and "l;"
+        if {_I} > 1:
+            send "&aYou have been given &c%{_I}%&a uncommon lootboxes!" to {_P}
+        if {_I} = 1:
+            send "&aYou have been given &c%{_I}%&a uncommon lootbox!" to {_P}
+
+function openRewards(p: player, t: text):
+    if {_t} contain "&7Common":
+        set metadata tag "Common Rewards" of {_P} to chest inventory with 3 rows named "&0Common Lootbox Rewards"
+        
+        set slot (integers between 0 and 9) and (integers between 17 and 26) of metadata tag "Common Rewards" of {_P} to gray stained glass pane named " "
+        set slot 10 and 16 of metadata tag "Common Rewards" of {_P} to white stained glass pane named " "
+
+        set slot 11 of metadata tag "Common Rewards" of {_P} to ender chest named "&bMoney Pouch Reward" with lore "&6Chance: &f40%%"
+        set slot 12 of metadata tag "Common Rewards" of {_P} to skull of "MrSnowDK" parsed as offlineplayer named "&bCash Reward" with lore "&6Chance: &f30%%" and "" and "&a$4,000 - $100,000"
+        set slot 13 of metadata tag "Common Rewards" of {_P} to skull of "ABigDwarf" parsed as offlineplayer named "&bShards Reward" with lore "&6Chance: &f15%%" and "" and "&d1,000 {@symbol} - $3,000 {@symbol}"
+        set slot 14 of metadata tag "Common Rewards" of {_P} to light blue dye named "&bRare Key Reward" with lore "&6Chance: &f13%%"
+        set slot 15 of metadata tag "Common Rewards" of {_P} to respawn anchor named "&bUncommon Lootbox" with lore "&6Chance: &f2%%"
+
+
+        open (metadata tag "Common Rewards" of {_P}) to {_P}
+
+
+function decimal1(n: number) :: text:
+  set {_prefixes} to "Qn,18:Qd,15:T,12:B,9:M,6:K,3"
+  loop {_prefixes} split at ":":
+    set {_s::*} to loop-value split at ","
+    {_n} >= 10 ^ {_s::2} parsed as number
+    return "%{_n} / 10 ^ {_s::2} parsed as number%%{_s::1}%"
+  return "%{_n}%"
+
+
+
+
+
+
+
+# COMMANDS
+
+
+command /lootbox [<text>] [<player>] [<text>] [<int>]:
+    permission: admin.lootbox
+    permission message: {@perm}
+    trigger:
+        if arg-1 is set:
+            if arg-1 is "give" or "deny" or "allow" or "reload":
+                if arg-1 is "reload":
+                    execute player command "/sk reload {@file}"
+                    loop all players:
+                        if loop-player has permission "staff":
+                            send "{@p} &7Configuration Reloaded Succcessfully!" to loop-player
+                else if arg-1 is not "reload":
+                    if arg-2 is set:
+                        if arg-3 is set:
+                            if arg-3 is "common" or "uncommon":
+                                if arg-4 is set:
+                                    
+                                    if arg-3 is "common":
+                                        lootbox(arg-3, arg-2, arg-4)
+                                    
+                                    if arg-3 is "uncommon":
+                                        lootbox(arg-3, arg-2, arg-4)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# EVENT
+
+on tab complete of "/lootbox":
+    set tab completions for position 1 to "give" and "deny" and "allow" and "reload"
+    set tab completions for position 3 to "common" or "uncommon"
+                                    
+
+on place:
+    if {lootbox::placed::%player's uuid%} is set:
+        cancel event
+        send "&cYou must wait until we finish fetching your current reward!"
+        
+    else if {lootbox::placed::%player's uuid%} is not set:
+        if name of player's held item contains "&7Common Lootbox &f(Place)":
+            set {lootbox::placed::%player's uuid%} to true
+            remove 1 of player's held item from player's inventory
+            send title "&a&lUNBOXING" to player for 1 seconds
+            set event-block to trapped chest named "&0Unboxing..."
+            set {location::loot::%player's uuid%} to "%location of event-block%" 
+            wait 1 seconds
+            send title "&a&lUNBOXING." to player for 1 seconds
+            wait 1 seconds
+            send title "&a&lUNBOXING.." to player for 1 seconds
+            wait 1 seconds
+            send title "&a&lUNBOXING..." to player for 1 seconds
+            wait 0.5 seconds
+            send title "&a&lUNBOXING." to player for 1 seconds
+            wait 0.5 seconds
+            send title "&a&lUNBOXING.." to player for 1 seconds
+            wait 0.5 seconds
+            send title "&a&lUNBOXING..." to player for 1 seconds
+            set event-block to air
+            delete {lootbox::placed::%player's uuid%}
+            delete {location::loot::%player's uuid%}
+
+                # REWARDS FOR COMMON CRATE
+            set {_num} to random integer between 1 and 100
+            if {_num} is between 1 and 40:
+                execute console command "/pouch give %player% money 1"
+                send action bar "&b+1 Money Pouch" to player
+            if {_num} is between 41 and 70:
+                set {_am} to random integer between 4000 and 100000
+                add {_am} to player's balance
+                send "&a$%decimal1({_am})% has been added to your account."
+                send action bar "&a$%decimal1({_am})%" to player
+            if {_num} is between 71 and 85:
+                set {_am} to random integer between 1000 and 3000
+                add {_am} to {shards::balance::%player's uuid%}
+                send "&d{@symbol}%decimal1({_am})% has been added to your account."
+                send action bar "&d{@symbol}%decimal1({_am})%" to player
+            if {_num} is between 85 and 98:
+                send action bar "&b+1 Rare Key" to player
+            if {_num} is between 99 and 100:
+                set {_type} to "uncommon"
+                lootbox({_type}, player, 1)
+                send action bar "&b+1 &aUncommon &bLootbox" to player
+
+on left click:
+    if name of player's held item contains "&7Common Lootbox &f(Place)":
+        set {_name} to name of player's held item
+        openRewards(player, {_name})
+
+on right click:
+    if {location::loot::%player's uuid%} = "%location of event-block%":
+        cancel event
+        send "&aFetching your reward..."
