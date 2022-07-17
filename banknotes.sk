@@ -1,0 +1,227 @@
+options:
+    
+    # Commands
+    prefix: &5&lBANKNOTES &8|
+
+    # Banknotes
+
+    firsttype: Money
+    secondtype: Shards
+
+    firstsymbol: $
+    secondsymbol: ❋
+
+
+    # Permissions:
+    
+    perm1: admin.banknote
+        # - This is to use the /banknote command.
+
+    staffperm: staff
+        # - This is the permission that all staff gain!
+    
+    permmessage: &cYou do not have permission to use this command.
+        # - Permission message - anytime any body tries to execute a command without the specified permission, this will be sent.
+
+    
+    filename: banknotes.sk
+        # - The file name
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#                          Edit This @ Your Own Risk
+#                      We advise you to only edit this
+#                         if you have experience in
+#                            Skript Development.
+
+
+on tab complete of "/banknote":
+    set tab completions for position 1 to "give" and "reload" and "deniedlist" and "deny" and "allow"
+    set tab completions for position 3 to "{@firsttype}" and "{@secondtype}"
+
+
+
+command /banknote [<text>] [<player>] [<text>] [<int>]:
+    permission: {@perm1}
+    permission message: {@permmessage}
+    trigger:
+        if arg-1 is set: # If a text value is set
+            if arg-1 is "give" or "deny" or "reload" or "allow" or "deniedlist": # will continue if they specify this value
+                
+                if arg-1 is "reload":
+                    execute player command "/sk reload {@filename}"
+                    loop all players:
+                        if loop-player has permission "{@staffperm}":
+                            send "{@prefix} &7Successfully Reloaded &6{@filename}&7." to loop-player
+                
+                if arg-1 is "deniedlist":
+                    if {banknote::denied::*} is set:
+                        send ""
+                        send "&b&lShowing all denied users for banknotes:"
+                        loop {banknote::denied::*}:
+                            send " &8- &f%loop-value%"
+                        send ""
+                    else if {banknote::denied::*} is not set:
+                        send "&cThere are no current users denied."
+                
+                if arg-1 is "give" or "deny" or "allow":
+                    if arg-2 is set: # checks for a player
+                        
+                        if arg-1 is "deny":
+                            if {banknote::denied::*} does not contain "%arg-2%":
+                                add "%arg-2%" to {banknote::denied::*}
+                                send "&aSuccessfully added &6%arg-2%&a to the denied list."
+                            if {banknote::denied::*} contains "%arg-2%":
+                                send "&cThis player is already denied."
+                        
+                        if arg-1 is "allow":
+                            if {banknote::denied::*} contains "%arg-2%":
+                                remove "%arg-2%" from {banknote::denied::*}
+                                send "&aSuccessfully removed &6%arg-2%&a from the denied list."
+                            if {banknote::denied::*} does not contain "%arg-2%":
+                                send "&cThis player is not denied."
+                        
+                        if arg-1 is "give":
+                            if arg-4 <= 100000000000:
+                                if arg-3 is set: # checks for text value
+                                    if arg-3 is "{@firsttype}" or "{@secondtype}":
+                                        if arg-4 is set:
+                                            if arg-3 is "{@firsttype}":
+                                                give arg-2 glowing paper named "&b{@firsttype} Banknote" with lore "&6Worth: &a$%arg-4%" and "" and "&a[Right-Click] &fClaim"
+                                                send "&aSuccessfully gave &6%arg-2% &aa {@firsttype} banknote worth &c{@firstsymbol}%arg-4%&a."
+                                            if arg-3 is "{@secondtype}":
+                                                give arg-2 glowing paper named "&b{@secondtype} Banknote" with lore "&6Worth: &a%arg-4%❋" and "" and "&a[Right-Click] &fClaim"
+                                                send "&aSuccessfully gave &6%arg-2% &aa {@secondtype} banknote worth &c{@secondsymbol}%arg-4%&a."
+                                        if arg-4 is not set:
+                                            send "&cYou must specify an valid integer (amount)."
+                                    if arg-3 is not "{@firsttype}" or "{@secondtype}":
+                                        send "&6Valid Values: &f{@firsttype}&a, &f{@secondtype}"
+                                if arg-3 is not set:
+                                    send "&6Valid Values: &f{@firsttype}&a, &f{@secondtype}"
+                            if arg-4 > 100000000000:
+                                send "&cInvalid Amount."
+            if arg-1 is not "give" or "deny" or "reload" or "allow" or "deniedlist":
+                send "&6Valid Values: &fGive&a, &fDeny&a, &fAllow&a, &fDeniedList"
+        if arg-1 is not set:
+            send "&6Valid Values: &fGive&a, &fDeny&a, &fAllow&a, &fDeniedList"
+
+on tab complete of "/withdraw":
+    set tab completions for position 1 to "money" or "shards"
+    set tab completions for position 2 to "<amount>"
+
+command /withdraw [<text>] [<int>]:
+    cooldown: 5 seconds
+    cooldown message: &cYou must wait %remaining time% before using this command again.
+    trigger:
+        if arg-1 is set:
+            if arg-1 is "shards" or "money":
+                if arg-2 is set:
+                    
+                    if arg-1 is "money":
+                        if arg-2 <= 100000000000:
+                            if player's balance >= arg-2:
+                                give player glowing paper named "&b{@firsttype} Banknote" with lore "&6Worth: &a$%arg-2%" and "" and "&a[Right-Click] &fClaim"
+                                send "&aWithdrew &c$%arg-2%&a."
+                                remove arg-2 from player's balance
+                                send action bar "&a-$%(decimalbn(arg-2))%" to player
+                            else if player's balance < arg-2:
+                                send "&cInsufficient Funds"
+                        else if arg-2 > 100000000000:
+                            send "&cInvalid Amount"
+                    if arg-1 is "shards":
+                        if arg-2 <= 100000000000:
+                            if {shards::balance::%player's uuid%} >= arg-2:
+                                give player glowing paper named "&b{@secondtype} Banknote" with lore "&6Worth: &a%arg-2%❋" and "" and "&a[Right-Click] &fClaim"
+                                send "&aWithdrew &c%arg-2%❋&a."
+                                remove arg-2 from {shards::balance::%player's uuid%}
+                                send action bar "&d-%(decimalbn(arg-2))%❋" to player
+                            else if {shards::balance::%player's uuid%} < arg-2:
+                                send "&cInsufficient Funds"
+                        else if arg-2 > 100000000000:
+                            send "&cInvalid Amount"
+                if arg-2 is not set:
+                    send "&cYou must specify a valid integer (amount)."
+            if arg-1 is not "shards" or "money":
+                send "&6Valid Values: &fMoney&a, &fShards"
+        if arg-1 is not set:
+            send "&6Valid Values: &fMoney&a, &fShards"
+
+
+
+on right click:
+    if name of player's held item contains "&b{@firsttype} Banknote":
+        set {_L} to uncolored line 1 of lore of player's held item #("&6Worth: &a$%arg-4%")
+        replace all "Worth:" and " $" with "" in {_L}
+        set {_L} to {_L} parsed as integer
+        add {_L} to player's balance
+        send "{@prefix} &aClaimed a money banknote worth &c$%(decimal({_L}))%&a."
+        send action bar "&a+$%(decimal({_L}))%" to player
+        play sound "entity.player.levelup" to player
+        remove 1 of player's held item from player's inventory
+    if name of player's held item contains "&b{@secondtype} Banknote":
+        set {_L} to uncolored line 1 of lore of player's held item #("&6Worth: &a%arg-4%❋")
+        replace all "Worth:" and " " and "❋" with "" in {_L}
+        send "%{_L}%"
+        set {_L} to {_L} parsed as integer
+        add {_L} to {shards::balance::%player's uuid%}
+        send "{@prefix} &aClaimed a shard banknote worth &c%(decimal({_L}))% ❋&a."
+        send action bar "&d+%(decimal({_L}))%❋" to player
+        play sound "entity.player.levelup" to player
+        remove 1 of player's held item from player's inventory
+
+function decimalbn(n: number) :: text:
+  set {_prefixes} to "Qn,18:Qd,15:T,12:B,9:M,6:K,3"
+  loop {_prefixes} split at ":":
+    set {_s::*} to loop-value split at ","
+    {_n} >= 10 ^ {_s::2} parsed as number
+    return "%{_n} / 10 ^ {_s::2} parsed as number%%{_s::1}%"
+  return "%{_n}%"
+
