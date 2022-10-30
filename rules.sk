@@ -1,0 +1,51 @@
+options:
+    p: &8[&d&lRULES&8]&r
+
+command /rules:admin [<text>] [<string>]:
+    permission: admin.rules.admin
+    permission message: &cYou do not have permission to use this command.
+    trigger:
+        if arg-1 is set:
+            if arg-1 is "add" or "remove":
+                if arg-2 is set:
+                    if arg-1 is "add":
+                        if {rules::*} contains arg-2:
+                            send "{@p} &cThis rule already exists."
+                        else if {rules::*} does not contain arg-2:
+                            add arg-2 to {rules::*}
+                            send "{@p} &aSuccessfully added &7'%arg-2%' &ato the rules."
+                    
+                    if arg-1 is "remove":
+                        if {rules::*} contains arg-2:
+                            remove arg-2 from {rules::*}
+                            send "{@p} &aSuccessfully &cremoved &7'%arg-2%' &afrom the rules."
+                        else if {rules::*} does not contain arg-2:
+                            send "{@p} &cThis rule does not exist."
+                if arg-2 is not set:
+                    send "{@p} &cYou must specify a rule."
+            if arg-1 is not "add" or "remove":
+                helpRules(player)
+        if arg-1 is not set:
+            helpRules(player)
+
+function helpRules(p: player):
+    send "&aAdmin Rules Key Sub Commands: &7(/rules:admin ...)" to {_P}
+    send "&6> &7add &6- &8<&7'rule'&8>" to {_P}
+    send "&6> &7remove &6- &8<&7'rule&8>" to {_P}
+
+on tab complete of "/rules:admin":
+    set tab completions of position 1 to "add" and "remove"
+
+command /rules:rules:
+    aliases: /rules
+    trigger:
+        if {rules::*} is set:
+            send ""
+            send "&6Server Rules:"
+            set {_I} to 0
+            loop {rules::*}:
+                add 1 to {_I}
+                send "&8[&7&l%{_I}%&8] &f%loop-value%"
+            send ""
+        else:
+            send "{@p} &7There's no current rules."
