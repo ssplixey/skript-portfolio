@@ -1,0 +1,148 @@
+options:
+    filename: report.sk
+
+command /report <player> [<string>]:
+    usage: &cUsage: /report <player> [<reason...>]
+    cooldown: 1 minute
+    cooldown message: &cYou must wait %remaining time% before using this again!
+    cooldown bypass: Splixey
+    trigger:
+        report(arg-1, arg-2, player)
+
+function report(o: player, t: text, p: player):
+    if {_O} is set:
+        
+        set metadata tag "ReportP" of {_P} to chest inventory with 3 rows named "&0Report Hub (%{_O}%)"
+
+        set slot 10 of metadata tag "ReportP" of {_P} to skull of ("%{_O}%" parsed as offline player) named "&aReport Offender" with lore "&fPlayer: &7%{_O}%" and "&fPlaytime: &7%{_O}'s time played ? "Can't fetch data..."%" and "&fGroup: &7%{_O}'s group ? "Can't fetch data..."%" and "&fPrefix: &7'%{_O}'s prefix ? "Can't fetch data..."%'" and "&fSuffix: &7'%{_O}'s suffix ? "Can't fetch data..."%'"
+        set slot 12 of metadata tag "ReportP" of {_P} to oak sign named "&aReason" with lore "&fYour Reason:" and "&8➲ &b'&7%{_T} ? "Undefined"%&b'"
+        set slot 14 of metadata tag "ReportP" of {_P} to birch sign named "&aPremade Reasons" with lore "&f(Click) Open Menu"
+        set slot 16 of metadata tag "ReportP" of {_P} to lime concrete named "&aConfirm" with lore "&fOffender: &7%{_O}%" and "&fReason: &7%{_T} ? "Undefined"%" and "" and "&f(Click) Send Report to Administrators"
+
+        open (metadata tag "ReportP" of {_P}) to {_P}
+
+
+
+function reportReasons(o: player, p: player):
+    
+    set metadata tag "ReportR" of {_P} to chest inventory with 3 rows named "&0Report Reasons (%{_O}%)"
+
+    set slot 10 of metadata tag "ReportR" of {_P} to paper named "&aUnfair Advantages" with lore "&fThis includes any sort of modifications!" and "" and "&f(Click) to Change the Reason to This"
+    set slot 11 of metadata tag "ReportR" of {_P} to paper named "&aChat Offenses" with lore "&fThis covers and sort of chat offense stated in the rules." and "" and "&f(Click) to Change the Reason to This"
+    set slot 12 of metadata tag "ReportR" of {_P} to paper named "&aHarassment" with lore "&fUse this if someone is harassing you or others!" and "" and "&f(Click) to Change the Reason to This"
+    set slot 13 of metadata tag "ReportR" of {_P} to paper named "&aIRL Trading" with lore "&fUse this if someone is attempting/is IRL trading." and "" and "&f(Click) to Change the Reason to This"
+    set slot 14 of metadata tag "ReportR" of {_P} to paper named "&aAccount Sharing" with lore "&fUse this if someone is account sharing with another user." and "" and "&f(Click) to Change the Reason to This"
+    set slot 15 of metadata tag "ReportR" of {_P} to paper named "&aIntentionally Causing Lag" with lore "&fUse this if someone is intentionally causing server lag." and "" and "&f(Click) to Change the Reason to This"
+    set slot 16 of metadata tag "ReportR" of {_P} to arrow named "&aReturn to Previous Page" with lore "&f(Click) to Go Back"
+
+    open (metadata tag "ReportR" of {_P}) to {_P} 
+
+function reportToggle(p: player):
+    
+    set metadata tag "ToggleReports" of {_P} to dispenser inventory named "&0Toggle Reports"
+
+    if {report::toggled::%{_P}'s uuid%} = "&aEnabled":
+        set slot 0 and 1 and 2 and 3 and 5 and 6 and 7 and 8 and 9 of metadata tag "ToggleReports" of {_P} to lime stained glass pane named " "
+    if {report::toggled::%{_P}'s uuid%} = "&cDisabled":
+        set slot 0 and 1 and 2 and 3 and 5 and 6 and 7 and 8 and 9 of metadata tag "ToggleReports" of {_P} to red stained glass pane named " "
+    set slot 4 of metadata tag "ToggleReports" of {_P} to bell named "&aToggle Report" with lore "&fStatus: %{report::toggled::%{_P}'s uuid%} ? "&cNot Set"%" and "" and "&f(Click) to Toggle"
+    
+    open (metadata tag "ToggleReports" of {_P}) to {_P}
+
+on inventory click:
+    if event-inventory = (metadata tag "ToggleReports" of player):
+        cancel event
+        if index of event-slot = 4:
+            if {report::toggled::%player's uuid%} = "&aEnabled":
+                set {report::toggled::%player's uuid%} to "&cDisabled"
+            else if {report::toggled::%player's uuid%} = "&cDisabled":
+                set {report::toggled::%player's uuid%} to "&aEnabled"
+            else if {report::toggled::%player's uuid%} is not set:
+                set {report::toggled::%player's uuid%} to "&cDisabled"
+            
+            close player's inventory
+            send title "&bChanged Report Status" with subtitle "&7to %{report::toggled::%player's uuid%}%" to player
+            wait 2 seconds
+            reportToggle(player)
+
+on inventory click:
+    if event-inventory = (metadata tag "ReportP" of player):
+        cancel event
+        set {_L} to line 2 of lore of slot 12 of metadata tag "ReportP" of player
+        replace all "&8➲ &b'" and "'" with "" in {_L}
+        set {_T} to uncolored name of event-inventory
+        replace all "Report Hub (" and ")" with "" in {_T}
+        set {_T} to ({_T} parsed as player)
+        if index of event-slot = 14:
+            reportReasons({_T}, player)
+        if index of event-slot = 16:
+            loop all players:
+                if {report::toggled::%loop-player's uuid%} = "&aEnabled":
+                    send " " to loop-player
+                    send "&c&lNEW REPORT:" to loop-player
+                    send "&8➲ &fOffender: &7%{_T}%" to loop-player
+                    send "&8➲ &fReason: &7%{_L}%" to loop-player
+                    send "&8➲ &fReporter: &7%player%" to loop-player
+                    send " " to loop-player
+
+on inventory click:
+    if event-inventory = (metadata tag "ReportR" of player):
+        cancel event
+        set {_L} to line 2 of lore of slot 12 of metadata tag "ReportP" of player
+        replace all "&8➲ &b'" and "'" with "" in {_L}
+        set {_T} to uncolored name of event-inventory
+        replace all "Report Reasons (" and ")" with "" in {_T}
+        set {_T} to ({_T} parsed as player)
+        if index of event-slot = 16:
+            report({_T}, "%{_L}%", player)
+        
+        if index of event-slot = 10:
+            report({_T}, "&c[!] &7[Premade] &aUnfair Advantages", player)
+        if index of event-slot = 11:
+            report({_T}, "&7[Premade] &aChat Offenses", player)
+        if index of event-slot = 12:
+            report({_T}, "&7[Premade] &aHarassment", player)
+        if index of event-slot = 13:
+            report({_T}, "&c[!] &7[Premade] &aIRL Trading", player)
+        if index of event-slot = 14:
+            report({_T}, "&c[!] &7[Premade] &aAccount Sharing", player)
+        if index of event-slot = 15:
+            report({_T}, "&c[!] &7[Premade] &aIntentionally Causing Lag", player)
+
+command /reportstaff [<string>] [<player>]:
+    permission: staff.reportstaff
+    permission message: &cYou do not have permission to use this command.
+    trigger:
+        if arg-1 is set:
+            if arg-1 is "toggle" or "reload" or "access":
+                if arg-1 is "toggle":
+                    reportToggle(player)
+                if arg-1 is "reload":
+                    if player has permission "admin.report.reload":
+                        execute player command "/sk reload {@filename}"
+                        send title "&aConfiguration Reloaded" with subtitle "&7{@filename}"
+                    if player does not have permission "admin.report.reload":
+                        send "&cYou do not have permission to use this sub command."
+                if arg-1 is "access":
+                    if player has permission "admin.report.access":
+                        if arg-2 is set:
+                            if arg-2's time played > 1 second:
+                                execute console command "/lp user %arg-2% permission set staff.reportstaff"
+                                send "&aGave %arg-2% permission to use this command!"
+                            if arg-2's time played < 1 second:
+                                send "&cThis player has not spent enough time on the server!"
+                        if arg-2 is not set:
+                            send "&aKey Sub Commands: &7(/reportstaff access ...)"
+                            send "&6> &7access &6- &8<&7player&8>"
+                    if player does not have permission "admin.report.access":
+                        send "&cYou do not have permission to use this sub command."
+            else if arg-1 is not "toggle" or "reload" or "access":
+                send "&aKey Sub Commands: &7(/reportstaff ...)"
+                send "&6> &7reload"
+                send "&6> &7toggle"
+                send "&6> &7access &6- &8<&7player&8>"
+        if arg-1 is not set:
+            send "&aKey Sub Commands: &7(/reportstaff ...)"
+            send "&6> &7reload"
+            send "&6> &7toggle"
+            send "&6> &7access &6- &8<&7player&8>"
