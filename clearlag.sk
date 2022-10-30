@@ -1,0 +1,57 @@
+options:
+    p: &e&l(&a&l!&e&l)&r
+    perm: &cYou do not have permission to use this command.
+
+    filename: clearlag.sk
+
+command /clearlag [<string>]:
+    aliases: /prisons:lag, /prisons:clearlag, /lag
+    permission: admin.clearlag
+    permission message: {@perm}
+    trigger:
+        if arg-1 is set:
+            if arg-1 is "reload":
+                execute player command "/sk reload {@filename}"
+                send title "&6Configuration Reloaded" with subtitle "&7{@filename}" to player
+            if arg-1 is not "reload":
+                send "&aClearLag Key Sub Commands: &7(/clearlag ...)"
+                send "&6> &7reload"
+        if arg-1 is not set:
+            set {_C} to 6
+            send "" to all players
+            send "{@p} &cDropped entities will be cleared in &6about 5 minutes&c." to all players
+            send "" to all players
+            wait 1 minute
+            send "" to all players
+            send "{@p} &cDropped entities will be cleared in &6about 4 minutes&c." to all players
+            send "" to all players
+            wait 1 minute
+            send "" to all players
+            send "{@p} &cDropped entities will be cleared in &6about 3 minutes&c." to all players
+            send "" to all players
+            wait 1 minute
+            send "" to all players
+            send "{@p} &cDropped entities will be cleared in &6about 2 minutes&c." to all players
+            send "" to all players
+            wait 1 minute
+            send "" to all players
+            send "{@p} &cDropped entities will be cleared in &6about 1 minute&c." to all players
+            send "" to all players
+            wait 30 seconds
+            send "" to all players
+            send "{@p} &cDropped entities will be cleared in &6about 30 seconds&c." to all players
+            send "" to all players
+            wait 20 seconds
+            send "" to all players
+            send "{@p} &cDropped entities will be cleared in &6about 10 seconds&c." to all players
+            send "" to all players
+            wait 5 seconds
+            send "" to all players
+            send "{@p} &cDropped entities will be cleared in &6about 5 seconds&c." to all players
+            send "" to all players
+            send "{@p} &aCleared &7%size of dropped items%&a dropped items in all worlds!" to all players
+            send "" to all players
+            kill dropped items
+
+every 10 minutes:
+    execute console command "/clearlag"
