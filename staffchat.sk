@@ -1,0 +1,68 @@
+on join:
+    if player has permission "staff.staffchat":
+        if {staffchat::toggle::%player's uuid%} is not set:
+            set {staffchat::toggle::%player's uuid%} to true
+
+command /staffchatreset:
+    trigger:
+        set {staffchat::toggle::%player's uuid%} to true
+
+command /staffchat <text>:
+    aliases: /sc 
+    permission: staff.staffchat
+    permission message: &cYou do not have permission to use this command.
+    usage: &cUsage: /sc <message...>
+    trigger:
+        if arg-1 = "hub":
+            if arg-1 is "hub":
+                staffchatAdmin(player)
+        else:
+            if {staffchat::toggle::%player's uuid%} = false:
+                send title "&cDisabled" with subtitle "&a/sc hub" to player
+            if {staffchat::toggle::%player's uuid%} is not set:
+                send title "&cNot Set" with subtitle "&a/sc hub" to player
+            if {staffchat::toggle::%player's uuid%} = true:
+                loop all players:
+                    if {staffchat::toggle::%loop-player's uuid%} = true:
+                        if "%region at player%" contains "prison":
+                            send "&8 ➲ &a[SC] &e%player% &7(prison)&e: %arg-1%" to loop-player
+            
+function staffchatAdmin(p: player):
+    set metadata tag "StaffChatAdmin" of {_P} to chest inventory with 5 rows named "&0Staff Chat Administration Panel"
+
+    if {staffchat::toggle::%{_P}'s uuid%} = true:
+        set slot 20 of metadata tag "StaffChatAdmin" of {_P} to glowing paper named "&cDisable Staff Chat" with lore " &8➲ &6Current Status: &aEnabled" and "" and " &8➲ &fClick to Toggle!"
+        set slot 10 and 11 and 12 and 19 and 21 and 28 and 29 and 30 of metadata tag "StaffChatAdmin" of {_P} to lime stained glass pane named " "
+    
+    if {staffchat::toggle::%{_P}'s uuid%} = false:
+        set slot 20 of metadata tag "StaffChatAdmin" of {_P} to paper named "&aEnable Staff Chat" with lore " &8➲ &6Current Status: &cDisabled" and "" and " &8➲ &fClick to Toggle!"
+        set slot 10 and 11 and 12 and 19 and 21 and 28 and 29 and 30 of metadata tag "StaffChatAdmin" of {_P} to red stained glass pane named " "
+    
+    if {_P} has permission "admin.staffchat.reload":
+        set slot 24 of metadata tag "StaffChatAdmin" of {_P} to ender chest named "&bReload Configuration File" with lore " &8➲ &7This will reload the configuration" and "   &7file and notify all active staff." and "" and "&8 ➲ &fClick to Reload"
+        set slot 14 and 15 and 16 and 23 and 25 and 34 and 32 and 33  of metadata tag "StaffChatAdmin" of {_P} to lime stained glass pane named " "
+
+    if {_P} has permission "admin.staffchat.reload":
+        set slot 24 of metadata tag "StaffChatAdmin" of {_P} to barrier named "&bReload Configuration File" with lore " &8➲ &6Required Permission: &fadmin.staffchat.reload" and "" and " &8➲ &cYou are not allowed to execute this operation."
+        set slot 14 and 15 and 16 and 23 and 25 and 32 and 33 and 34 of metadata tag "StaffChatAdmin" of {_P} to red stained glass pane named " "
+    
+
+    open (metadata tag "StaffChatAdmin" of {_P}) to {_P}
+
+on inventory click:
+    if event-inventory = (metadata tag "StaffChatAdmin" of player):
+        cancel event
+        if index of event-slot = 20:
+            if {staffchat::toggle::%player's uuid%} = false:
+                set {staffchat::toggle::%player's uuid%} to true
+                send title "&bStaff Chat Toggle" with subtitle "&7Set to &aEnabled&7!"
+                close player's inventory
+            else if {staffchat::toggle::%player's uuid%} = true:
+                set {staffchat::toggle::%player's uuid%} to false
+                send title "&bStaff Chat Toggle" with subtitle "&7Set to &cDisabled&7!"
+                close player's inventory
+        if index of event-slot = 24:
+            execute player command "/sk reload staffchat.sk"
+            loop all players:
+                if loop-player has permission "staff":
+                    send " &8➲ &6Reloaded StaffChat Configuration Successfully!" to loop-player
