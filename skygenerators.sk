@@ -1,0 +1,144 @@
+# Generators:
+# (result) - (generator block)
+# top soil - coarse dirt
+# pebble - mossy cobble stone
+# gold fragment - gold block
+# diamond crystal - diamond block
+# frosted gem - quartz
+# ruby - redstone block
+
+command /gengive [<player>] [<text>] [<int>]:
+    permission: generator.give
+    permission message: &cYou do not have permission to use this command.
+    trigger:
+        if arg-1 is set:
+            if arg-2 is set:
+                if arg-2 is "topsoil" or "pebble" or "goldfragment" or "diamondcrystal" or "frostedgem" or "ruby" or "*":
+                    if arg-3 is set:
+                        gengive(arg-1, arg-2, arg-3)
+                    if arg-3 is not set:
+                        send "&cYou must specify an amount."
+            if arg-2 is not set:
+                send "&ctopsoil, pebble, goldfragment, diamondcrystal, frostedgem, ruby"
+        if arg-1 is not set:
+            send "&cPlayer please."
+
+function gengive(p: player, t: text, i: integer):
+    if {_P} is set:
+        if {_T} is set:
+            if {_T} is "topsoil":
+                loop {_I} times:
+                    give {_P} coarse dirt named "<##964B00>Top Soil Sky Generator" with lore "&fThis will generate <##964B00>'Top Soil'&f."
+            if {_T} is "pebble":
+                loop {_I} times:
+                    give {_P} mossy cobblestone named "&7Pebble Sky Generator" with lore "&fThis will generate &7'Pebble'&f."
+            if {_T} is "goldfragment":
+                loop {_I} times:
+                    give {_P} gold block named "&eGold Fragment Sky Generator" with lore "&fThis will generate &e'Gold Fragment'&f."
+            if {_T} is "diamondcrystal":
+                loop {_I} times:
+                    give {_P} diamond block named "&bDiamond Crystal Sky Generator" with lore "&fThis will generate &b'Diamond Crystal'&f."
+            if {_T} is "frostedgem":
+                loop {_I} times:
+                    give {_P} quartz block named "&fFrosted Gem Sky Generator" with lore "&fThis will generate 'Frosted Gem'."
+            if {_T} is "ruby":
+                loop {_I} times:
+                    give {_P} redstone block named "&cRuby Sky Generator" with lore "&fThis will generate &c'Ruby'&f."
+            if {_T} is "*":
+                loop {_I} times:
+                    give {_P} coarse dirt named "<##964B00>Top Soil Sky Generator" with lore "&fThis will generate <##964B00>'Top Soil'&f."
+                    give {_P} mossy cobblestone named "&7Pebble Sky Generator" with lore "&fThis will generate &7'Pebble'&f."
+                    give {_P} gold block named "&eGold Fragment Sky Generator" with lore "&fThis will generate &e'Gold Fragment'&f."
+                    give {_P} diamond block named "&bDiamond Crystal Sky Generator" with lore "&fThis will generate &b'Diamond Crystal'&f."
+                    give {_P} quartz block named "&fFrosted Gem Sky Generator" with lore "&fThis will generate 'Frosted Gem'."
+                    give {_P} redstone block named "&cRuby Sky Generator" with lore "&fThis will generate &c'Ruby'&f."
+
+on place:
+    if name of player's held item contains "Sky Generator":
+        if name of player's held item contains "Top Soil":
+            set event-block to air
+            wait 2 seconds
+            set event-block to coarse dirt
+        if name of player's held item contains "Pebble":
+            set event-block to air
+            wait 2 seconds
+            set event-block to mossy cobblestone
+        if name of player's held item contains "Gold Fragment":
+            set event-block to air
+            wait 2 seconds
+            set event-block to gold block
+        if name of player's held item contains "Diamond Crystal":
+            set event-block to air
+            wait 2 seconds
+            set event-block to diamond block
+        if name of player's held item contains "Frosted Gem":
+            set event-block to air
+            wait 2 seconds
+            set event-block to quartz block
+        if name of player's held item contains "Ruby":
+            set event-block to air
+            wait 2 seconds
+            set event-block to redstone block
+        add location of event-block to {gens::*}
+        send action bar "&aPlaced Sky Generator &7(%event-block%)" to player
+
+command /testskygenslist:
+    trigger:
+        loop {gens::*}:
+            send "%loop-value%"
+
+command /testskygensdel:
+    trigger:
+        delete {gens::*}
+
+
+every 2 seconds:
+    loop {gens::*}:
+        if block at loop-value contains coarse dirt:
+            drop 1 of skull of ("ChazOfftopic" parsed as offline player) named "<##964B00>Top Soil" with lore "&fTrade with the <##964B00>Top Soil Merchant&f." above loop-value without velocity
+        if block at loop-value contains mossy cobblestone:
+            drop 1 of skull of ("CreeperkingNV" parsed as offline player) named "&7Pebble" with lore "&fTrade with the &7Pebble Merchant&f." above loop-value without velocity
+        if block at loop-value contains gold block:
+            drop 1 of skull of ("StackedGold" parsed as offline player) named "&eGold Fragment" with lore "&fTrade with the &eGold Fragment Merchant&f." above loop-value without velocity
+        if block at loop-value contains diamond block:
+            drop 1 of skull of ("akaBruce" parsed as offline player) named "&bDiamond Crystal" with lore "&fTrade with the &bDiamond Crystal Merchant&f." above loop-value without velocity
+        if block at loop-value contains quartz block:
+            drop 1 of skull of ("Chaochris" parsed as offline player) named "&fFrosted Gem" with lore "&fTrade with the Frosted Gem Merchant." above loop-value without velocity
+        if block at loop-value contains redstone block:
+            drop 1 of skull of ("SkidzGaming" parsed as offline player) named "&cRuby" with lore "&fTrade with the &cRuby Merchant&f." above loop-value without velocity
+
+
+on left click:
+    if "%region at event-block%" contains "generator":
+        if player has permission "admin.generator.remove":
+            if player is sneaking:
+                set {_B} to event-block
+                set event-block to air
+                remove event-block from {gens::*}
+                send action bar "&cRemoved Sky Generator &7(%{_B}%)" to player
+
+on break:
+    if {gens::*} contains location at event-block:
+        cancel event
+
+
+on drop:
+    if {drops::%player's uuid%} is set:
+        cancel event
+        send action bar "&cDrops Disabled. &7(/drops)" to player
+
+command /drops:
+    trigger:
+        if {drops::%player's uuid%} is set:
+            set {_waited} to difference between {drops::%player's uuid%} and now
+            if {_waited} > 30 seconds:
+                delete {drops::%player's uuid%}
+                stop
+            send action bar "&cDrops are still enabled for %{_waited}%" to player
+        if {drops::%player's uuid%} is not set:
+            set {drops::%player's uuid%} to now
+            send action bar "&aDrops are now enabled for 30 seconds." to player
+            wait 30 seconds
+            delete {drops::%player's uuid%}
+
+
