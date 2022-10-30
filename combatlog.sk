@@ -1,0 +1,66 @@
+options:
+    p: &c&lCOMBATLOG &8|
+    perm: &cYou do not have permission to use this command.
+
+on damage:
+    if {combatlog::%victim's uuid%} is not set:
+        if attacker = player:
+            if victim = player:
+                set {combatlog::%attacker's uuid%} to true
+                set {combatlog::%victim's uuid%} to true
+                send "{@p} &cYou are now in combat, do not log out!" to attacker and victim
+                set {_time} to 10
+                loop 10 times:
+                    send action bar "{@p} &aRemaining Time: &7%{_time}% seconds." to attacker and victim
+                    wait 1 second
+                    remove 1 from {_time}
+                if {combatlog::%attacker's uuid%} is set:
+                    delete {combatlog::%attacker's uuid%}
+                    send "{@p} &aYou are no longer in combat, you may now log out safely!" to attacker
+                if {combatlog::%victim's uuid%} is set:
+                    delete {combatlog::%victim's uuid%}
+                    send "{@p} &aYou are no longer in combat, you may now log out safely!" to victim
+
+on respawn:
+    if {combatlog::%player's uuid%} is set:
+        delete {combatlog::%player's uuid%} 
+        send "{@p} &aYou are no longer in combat, you may now log out safely!" to player
+
+on quit:
+    if {combatlog::quit::%player's uuid%} != 3:
+        if {combatlog::%player's uuid%} is set:
+            execute console command "/tempban %player% 30m Combat Logging"
+            add 1 to {combatlog::quit::%player's uuid%}
+    if {combatlog::quit::%player's uuid%} >= 3:
+        if {combatlog::%player's uuid%} is set:
+            execute console command "/ban %player% Combat Logging"
+            set {combatlog::quit::%player's uuid%} to "&aBanned."
+            add "%player%" to {combatlog::banned::*}
+
+command /combatlog:banned:
+    permission: staff.combatlog.banned
+    permission message: {@perm}
+    trigger:
+        if {combatlog::banned::*} is set:
+            send ""
+            send "&b&lShowing current bans due to &ccombat logging&b&l:"
+            loop {combatlog::banned::*}:
+                send " &8- &b%loop-value%"
+            send ""
+        else:
+            send "&cNo current bans due to combat logging limit."
+
+command /combatlog:removeban [<player>]:
+    permission: admin.combatlog.removeban
+    permission message: {@perm}
+    trigger:
+        if {combatlog::banned::*} is set:
+            if {combatlog::banned::*} contains arg-1:
+                remove "%arg-1%" from {combatlog::banned::*}
+                send "&aRemoved %arg-1% from combat bans!"
+                execute console command "/unban %arg-1% Revoked Combat Log Ban - by %player%"
+            else if {combatlog::banned::*} does not contain arg-1:
+                send "<suggest command:/unban %arg-1%>&cThis player is currently not combat log banned."
+        if {combatlog::banned::*} is not set:
+            send "&cThere are no current bans for combat logging limit."
+
