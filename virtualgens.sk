@@ -1,0 +1,218 @@
+options:
+    p: &2&lVIRTUAL&a&lGENS &7»
+    interval_time: 1 seconds
+
+every {@interval_time}:
+    if {virtualgens::toggle} = "&aEnabled": 
+        loop all players:
+            if {gen::joined::%loop-player's uuid%} is set:
+                add {interval::pay::%loop-player's uuid%} to loop-player's balance
+                send action bar "{@p} &a+$%{interval::pay::%loop-player's uuid%}%" to loop-player
+
+command /vgadmin [<text>]:
+    permission: admin.vgadmin
+    permission message: &cYou do not have permission to use this command.
+    trigger:
+        if arg-1 is set:
+            if arg-1 is "toggle":
+                if {virtualgens::toggle} = "&aEnabled":
+                    virtualgensToggle(player, "&cDisabled")
+                    set {virtualgens::newoutcome::%player%} to "&cDisabled"
+                if {virtualgens::toggle} = "&cDisabled":
+                    virtualgensToggle(player, "&aEnabled")
+                    set {virtualgens::newoutcome::%player%} to "&aEnabled"
+            if arg-1 is "reload":
+                execute player command "/sk reload virtualgens.sk"
+                loop all players: 
+                    if loop-player has permission "staff":
+                        send "&b&lALERTS &8| &aSuccessfully reloaded &6virtualgens.sk&a. &8(%player%)" to loop-player
+            if arg-1 is "clear":
+                delete {interval::pay::*} 
+                send "{@p} &aSuccessfully Cleared Pay!"
+                        
+every 5 seconds:
+    loop all players:
+        if {interval::pay::%loop-player's uuid%} is not set:
+            set {interval::pay::%loop-player's uuid%} to 0
+
+on tab complete of "/vgadmin":
+    set tab completions of position 1 to "toggle" and "reload" and "clear"
+
+
+function virtualgensToggle(p: player, t: text):
+    set metadata tag "VGT" of {_P} to dispenser inventory named "&0Virtual Gens Toggle"
+    
+    set slot 0 and 1 and 2 and 3 and 5 and 6 and 7 and 8 and 9 of metadata tag "VGT" of {_P} to barrier named "&cClose" with lore " " and "&7Click here to close."
+    set slot 4 of metadata tag "VGT" of {_P} to emerald block named "&aConfirm" with lore "&7New Status: %{_T}%" and " " and "&7Click here to confirm!"
+
+    open (metadata tag "VGT" of {_P}) to {_P}
+
+on inventory click:
+    if event-inventory = (metadata tag "VGT" of player):
+        cancel event
+        if index of event-slot is 0 or 1 or 2 or 3 or 5 or 6 or 7 or 8 or 9:
+            close player's inventory
+        else if index of event-slot = 4:
+            set {virtualgens::toggle} to {virtualgens::newoutcome::%player%}
+            close player's inventory
+
+on join:
+    if {gen::joined::%player's uuid%} is not set:
+        
+        set {gen::joined::%player's uuid%} to "%now%"
+
+        add 1 to {joinnumber}
+        set {uniquenumb::%player's uuid%} to {joinnumber}
+
+        set {genamount::stone::%player's uuid%} to 1
+        set {genamount::iron::%player's uuid%} to 0
+        set {genamount::gold::%player's uuid%} to 0
+        set {genamount::redstone::%player's uuid%} to 0
+        set {genamount::lapis::%player's uuid%} to 0
+        set {genamount::diamond::%player's uuid%} to 0
+        set {genamount::emerald::%player's uuid%} to 0
+        set {genamount::light::%player's uuid%} to 0
+        set {genamount::dark::%player's uuid%} to 0
+        set {genamount::heavenly::%player's uuid%} to 0
+
+        set {gencost::stone::%player's uuid%} to 150
+        set {gencost::iron::%player's uuid%} to 600
+        set {gencost::gold::%player's uuid%} to 2600
+        set {gencost::redstone::%player's uuid%} to 5000
+        set {gencost::lapis::%player's uuid%} to 20000
+        set {gencost::diamond::%player's uuid%} to 70000
+        set {gencost::emerald::%player's uuid%} to 90000
+        set {gencost::light::%player's uuid%} to 200000
+        set {gencost::dark::%player's uuid%} to 1000000
+        set {gencost::heavenly::%player's uuid%} to 5000000
+
+        set {interval::pay::%player's uuid%} to 1
+
+on inventory click:
+    if event-inventory = (metadata tag "VGH" of player):
+        cancel event
+        if index of event-slot = 13:
+            virtualgenUpgrades(player)
+    if event-inventory = (metadata tag "VGU" of player):
+        cancel event
+        if index of event-slot = 0:
+            if player's balance >= {gencost::stone::%player's uuid%}:
+                add 1 to {interval::pay::%player's uuid%}
+                send "{@p} &aAdded 1 Stone Generator"
+                remove {gencost::stone::%player's uuid%} from player's balance
+            else:
+                send "&cYou do not have enough money!"
+        if index of event-slot = 1:
+            if player's balance >= {gencost::iron::%player's uuid%}:
+                add 2 to {interval::pay::%player's uuid%}
+                send "{@p} &aAdded 1 Iron Generator"
+                remove {gencost::iron::%player's uuid%} from player's balance
+            else:
+                send "&cYou do not have enough money!"
+        if index of event-slot = 2:
+            if player's balance >= {gencost::gold::%player's uuid%}:
+                add 5 to {interval::pay::%player's uuid%}
+                send "{@p} &aAdded 1 Gold Generator"
+                remove {gencost::gold::%player's uuid%} from player's balance
+            else:
+                send "&cYou do not have enough money!"
+        if index of event-slot = 3:
+            if player's balance >= {gencost::redstone::%player's uuid%}:
+                add 7 to {interval::pay::%player's uuid%}
+                send "{@p} &aAdded 1 Redstone Generator"
+                remove {gencost::redstone::%player's uuid%} from player's balance
+            else:
+                send "&cYou do not have enough money!"
+        if index of event-slot = 4:
+            if player's balance >= {gencost::lapis::%player's uuid%}:
+                add 10 to {interval::pay::%player's uuid%}
+                send "{@p} &aAdded 1 Lapis Generator"
+                remove {gencost::lapis::%player's uuid%} from player's balance
+            else: 
+                send "&cYou do not have enough money!"
+        if index of event-slot = 5:
+            if player's balance >= {gencost::diamond::%player's uuid%}:
+                add 30 to {interval::pay::%player's uuid%}
+                send "{@p} &aAdded 1 Diamond Generator"
+                remove {gencost::diamond::%player's uuid%} from player's balance
+            else:
+                send "&cYou do not have enough money!"
+        if index of event-slot = 6:
+            if player's balance >= {gencost::emerald::%player's uuid%}:
+                add 50 to {interval::pay::%player's uuid%}
+                send "{@p} &aAdded 1 Emerald Generator"
+                remove {gencost::emerald::%player's uuid%} from player's balance
+            else:
+                send "&cYou do not have enough money!"
+        if index of event-slot = 7:
+            if player's balance >= {gencost::light::%player's uuid%}:
+                add 100 to {interval::pay::%player's uuid%}
+                send "{@p} &aAdded 1 Light Generator"
+                remove {gencost::light::%player's uuid%} from player's balance
+            else:
+                send "&cYou do not have enough money!"
+        if index of event-slot = 8:
+            if player's balance >= {gencost::dark::%player's uuid%}:
+                add 150 to {interval::pay::%player's uuid%}
+                send "{@p} &aAdded 1 Dark Generator"
+                remove {gencost::dark::%player's uuid%} from player's balance
+            else:
+                send "&cYou do not have enough money!"
+        if index of event-slot = 9:
+            if player's balance >= {gencost::heavenly::%player's uuid%}:
+                add 500 to {interval::pay::%player's uuid%}
+                send "{@p} &aAdded 1 Heavenly Generator"
+                remove {gencost::heavenly::%player's uuid%} from player's balance
+            else:
+                send "&cYou do not have enough money!"
+
+
+
+function vgdecimal(n: number) :: text:
+  set {_prefixes} to "Qn,18:Qd,15:T,12:B,9:M,6:K,3"
+  loop {_prefixes} split at ":":
+    set {_s::*} to loop-value split at ","
+    {_n} >= 10 ^ {_s::2} parsed as number
+    return "%{_n} / 10 ^ {_s::2} parsed as number%%{_s::1}%"
+  return "%{_n}%"
+
+function virtualgenHub(p: player):
+    
+    if {_P} is set:
+        set metadata tag "VGH" of {_P} to chest inventory with 3 rows named "&0Virtual Generator Hub"
+
+        set slot 11 of metadata tag "VGH" of {_P} to gold nugget named "&aWealth" with lore "&7Let the rich help the poor." and " " and "&bMoney: %vgdecimal({_P}'s balance)%"
+        set slot 13 of metadata tag "VGH" of {_P} to magenta glazed terracotta named "&aUpgrades" with lore "&7Let the economy boost!" and  " " and "&bClick here to view available upgrades!"
+        set slot 15 of metadata tag "VGH" of {_P} to skull of {_P} named "&aUnique Joins" with lore "&7Statistics for nerds." and " " and "&bJoin: &f##%{uniquenumb::%{_P}'s uuid%}%" and "&bTotal Joins: &f%{joinnumber}%"
+
+        open (metadata tag "VGH" of {_P}) to {_P}
+
+function virtualgenUpgrades(p: player):
+
+    if {_P} is set:
+        set metadata tag "VGU" of {_P}  to chest inventory with 3 rows named "&0Virtual Generator Upgrades"
+        
+        set slot 0 of metadata tag "VGU" of {_P} to cobblestone named "&aStone Generator" with lore "&7Price: &a$%{gencost::stone::%{_P}'s uuid%}%" and "&7Additive: &a+1"
+        set slot 1 of metadata tag "VGU" of {_P} to iron ingot named "&aIron Generator" with lore "&7Price: &a$%{gencost::iron::%{_P}'s uuid%}%" and "&7Additive: &a+2"
+        set slot 2 of metadata tag "VGU" of {_P} to gold ingot named "&aGold Generator" with lore "&7Price: &a$%{gencost::gold::%{_P}'s uuid%}%" and "&7Additive: &a+5"
+        set slot 3 of metadata tag "VGU" of {_P} to redstone dust named "&aRedstone Generator" with lore "&7Price: &a$%{gencost::redstone::%{_P}'s uuid%}%" and "&7Additive: &a+7"
+        set slot 4 of metadata tag "VGU" of {_P} to lapis lazuli named "&aLapis Generator" with lore "&7Price: &a$%{gencost::lapis::%{_P}'s uuid%}%" and "&7Additive: &a+10"
+        set slot 5 of metadata tag "VGU" of {_P} to diamond named "&aDiamond Generator" with lore "&7Price: &a$%{gencost::diamond::%{_P}'s uuid%}%" and "&7Additive: &a+30"
+        set slot 6 of metadata tag "VGU" of {_P} to emerald named "&aEmerald Generator" with lore "&7Price: &a$%{gencost::emerald::%{_P}'s uuid%}%" and "&7Additive: &a+50"
+        set slot 7 of metadata tag "VGU" of {_P} to quartz named "&aLight Generator" with lore "&7Price: &a$%{gencost::light::%{_P}'s uuid%}%" and "&7Additive: &a+100"
+        set slot 8 of metadata tag "VGU" of {_P} to netherite scrap named "&aDark Generator" with lore "&7Price: &a$%{gencost::dark::%{_P}'s uuid%}%" and "&7Additive: &a+150"
+        set slot 9 of metadata tag "VGU" of {_P} to nether star named "&aHeavenly Generator" with lore "&7Price: &a$%{gencost::heavenly::%{_P}'s uuid%}%" and "&7Additive: &a+500"
+         
+        open (metadata tag "VGU" of {_P}) to {_P}
+
+command /virtualgens:
+    aliases: vghub, vg, virtualgenhub, virtualgen
+    cooldown: 5 seconds
+    cooldown message: &cYou must wait %remaining time% before using this command again!
+    cooldown bypass: Splixey
+    trigger:
+        virtualgenHub(player)
+
+
+
+
