@@ -1,0 +1,45 @@
+on join:
+  if {voteparty} is not set:
+    set {voteparty} to 0
+  if {rank::%player's uuid%} is not set:
+    set {rank::%player's uuid%} to 0
+  if {prestige::%player's uuid%} is not set:
+    set {prestige::%player's uuid%} to 0
+  if {blocks::mined::%player's uuid%} is not set:
+    set {blocks::mined::%player's uuid%} to 0
+
+on break:
+  if "%region at event-block%" contains "mine":
+    add 1 to {blocks::mined::%player's uuid%}
+
+
+on join:
+    while player is online:
+        set title of player's scoreboard to "&d&lVERDICT&b&lMC"
+        set line 1 of player's scoreboard to "&7ᴠᴇʀᴅɪᴄᴛᴍᴄ.ᴍɪɴᴇʜᴜᴛ.ɢɢ"
+        set line 2 of player's scoreboard to " "
+        set line 3 of player's scoreboard to " &fMultiplier: &d%sbdecimal({multiplier::%player's uuid%})%"
+        set line 4 of player's scoreboard to " &fCrystal Shards: &b%{crystals::%player's uuid%}%"
+        set line 5 of player's scoreboard to " &fTokens: &a⛁ %sbdecimal({tokens::balance::%player's uuid%})%"
+        set line 6 of player's scoreboard to " &fMoney: &a$%sbdecimal(player's balance)%"
+        set line 7 of player's scoreboard to "&b&lStatistics"
+        set line 8 of player's scoreboard to "  "
+        set line 9 of player's scoreboard to " &fVote Party: &c%{voteparty}%/250"
+        set line 10 of player's scoreboard to " &fBlocks Mined: &c%sbdecimal({blocks::mined::%player's uuid%})%"
+        set line 11 of player's scoreboard to " &fPrestige: &c%sbdecimal({prestige::%player's uuid%})%"
+        set line 12 of player's scoreboard to " &fRank: &c%sbdecimal({rank::%player's uuid%})%"
+        set line 13 of player's scoreboard to "&b&l%player%"
+        set line 14 of player's scoreboard to "   "
+        wait 1 tick
+
+
+on disconnect:
+    clear player's scoreboard
+
+function sbdecimal(n: number) :: text:
+  set {_prefixes} to "Qn,18:Qd,15:T,12:B,9:M,6:K,3"
+  loop {_prefixes} split at ":":
+    set {_s::*} to loop-value split at ","
+    {_n} >= 10 ^ {_s::2} parsed as number
+    return "%{_n} / 10 ^ {_s::2} parsed as number%%{_s::1}%"
+  return "%{_n}%"
