@@ -1,0 +1,133 @@
+options:
+    p: &c&lBALMANAGE &8»
+
+
+command /balmanage [<text>] [<player>] [<integer>]:
+    permission: admin.balmanage
+    permission message: &c&lHey! &7You do not have permission to use this command.
+    trigger:
+        if arg-1 is set:
+            if arg-1 is "set" or "reset" or "resetall" or "remove" or "add" or "options":
+                
+                if arg-1 is "set":
+                    if arg-2 is set:
+                        if arg-3 is set:
+                    
+                            set arg-2's balance to arg-3
+                            send "{@p} &aSet %arg-2%'s balance to &6$%arg-3%&a."
+                            send "{@p} &6%player% &ahas set your balance to &6$%arg-3%&a." to arg-2
+                            
+                        if arg-3 is not set:
+                            send "&c&lHey! &7You must specify an amount."
+                    if arg-2 is not set:
+                        send "&c&lHey! &7You must specify a player."
+                
+                if arg-1 is "reset":
+                    if arg-2 is set:
+                            
+                        set arg-2's balance to 0
+                        send "{@p} &aSet %arg-2%'s balance to &6$0&a."
+                        send "{@p} &6%player% &ahas reset your balance back to &6$0&a." to arg-2
+                        
+                    if arg-2 is not set:
+                        send "&c&lHey! &7You must specify a player!"
+                
+                if arg-1 is "resetall":
+                    
+                    loop all players:
+                        set loop-player's balance to 0
+                        add 1 to {_totalplayers}
+                    send "{@p} &aSet %{_totalplayers}% balance to &6$0&a."
+                    delete {_totalplayers}
+                
+                if arg-1 is "remove":
+                    if arg-2 is set:
+                        if arg-3 is set:
+
+                            set {argumentbalance} to arg-2's balance
+                            remove arg-3 from arg-2's balance
+                            send "{@p} &aSet %arg-2%'s balance to &6%arg-2's balance%&a. &c(%{argumentbalance}% - %arg-3%)"
+                            send "{@p} &6%player% &ahas set your balance to &6%arg-2's balance%&a. &c(%{argumentbalance}% - %arg-3%)" to arg-2
+                            delete {argumentbalance}
+                        
+                        if arg-3 is not set:
+                            send "&c&lHey! &7You must specify an amount!"
+                    if arg-2 is not set:
+                        send "&c&lHey! &7You must specify a player!"
+                
+                if arg-1 is "add":
+                    if arg-2 is set:
+                        if arg-3 is set:
+                            
+                            set {argumentbalance} to arg-2's balance
+                            add arg-3 to arg-2's balance
+                            send "{@p} &aSet %arg-2%'s balance to &6%arg-2's balance%&a. &c(%{argumentbalance}% + %arg-3%)"
+                            send "{@p} &6%player% &ahas set your balance to &6%arg-2's balance%&a. &c(%{argumentbalance}% + %arg-3%)" to arg-2
+                            delete {argumentbalance}
+                        
+                        if arg-3 is not set:
+                            send "&c&lHey! &7You must specify an amount!"
+                    if arg-2 is not set:
+                        send "&c&lHey! &7You must specify a player!"
+                
+                if arg-1 is "options":
+                    send "" 
+                    send "&b&lShowing all options for &cBALMANAGE&b&l:"
+                    send "   &8➥ &foptions &c- &7Opens this menu."
+                    send "   &8➥ &fset &c- &7Will set the specified player's balance to the specified amount."
+                    send "   &8➥ &fadd &c- &7Will add the specified amount to the specified player's balance."
+                    send "   &8➥ &fremove &c- &7Will remove the specified amount from the specified player's balance."
+                    send "   &8➥ &freset &c- &7Will reset the specified player's balance back to 0."
+                    send "   &8➥ &fresetall &c-&7Will reset all player's balances back to 0."
+                    send ""
+                    send "&b&lShowing correct usages for &cBALMANAGE&b&l:"
+                    send "   &8➥ &fset &c- &7/balmanage set <player> <amount to set>"
+                    send "   &8➥ &fadd &c- &7/balmanage add <player> <amount to add>"
+                    send "   &8➥ &fremove &c- &7/balmanage remove <player> <amount to remove>"
+                    send "   &8➥ &freset &c- &7/balmanage reset <player>"
+                    send "   &8➥ &fresetall &c- &7/balmanage resetall"
+                    send ""
+                
+            if arg-1 is not "set" or "reset" or "resetall" or "remove" or "add" or "options":
+                send "" 
+                send "&b&lShowing all options for &cBALMANAGE&b&l:"
+                send "   &8➥ &foptions &c- &7Opens this menu."
+                send "   &8➥ &fset &c- &7Will set the specified player's balance to the specified amount."
+                send "   &8➥ &fadd &c- &7Will add the specified amount to the specified player's balance."
+                send "   &8➥ &fremove &c- &7Will remove the specified amount from the specified player's balance."
+                send "   &8➥ &freset &c- &7Will reset the specified player's balance back to 0."
+                send "   &8➥ &fresetall &c-&7Will reset all player's balances back to 0."
+                send ""
+                send "&b&lShowing correct usages for &cBALMANAGE&b&l:"
+                send "   &8➥ &fset &c- &7/balmanage set <player> <amount to set>"
+                send "   &8➥ &fadd &c- &7/balmanage add <player> <amount to add>"
+                send "   &8➥ &fremove &c- &7/balmanage remove <player> <amount to remove>"
+                send "   &8➥ &freset &c- &7/balmanage reset <player>"
+                send "   &8➥ &fresetall &c- &7/balmanage resetall"
+                send ""
+        
+        if arg-1 is not set:
+            send "" 
+            send "&b&lShowing all options for &cBALMANAGE&b&l:"
+            send "   &8➥ &foptions &c- &7Opens this menu."
+            send "   &8➥ &fset &c- &7Will set the specified player's balance to the specified amount."
+            send "   &8➥ &fadd &c- &7Will add the specified amount to the specified player's balance."
+            send "   &8➥ &fremove &c- &7Will remove the specified amount from the specified player's balance."
+            send "   &8➥ &freset &c- &7Will reset the specified player's balance back to 0."
+            send "   &8➥ &fresetall &c-&7Will reset all player's balances back to 0."
+            send ""
+            send "&b&lShowing correct usages for &cBALMANAGE&b&l:"
+            send "   &8➥ &fset &c- &7/balmanage set <player> <amount to set>"
+            send "   &8➥ &fadd &c- &7/balmanage add <player> <amount to add>"
+            send "   &8➥ &fremove &c- &7/balmanage remove <player> <amount to remove>"
+            send "   &8➥ &freset &c- &7/balmanage reset <player>"
+            send "   &8➥ &fresetall &c- &7/balmanage resetall"
+            
+command /resetbalmanage:
+    permission: admin.resetbalmanage
+    permission message: &c&lHey! &7You do not have permission to use this command.
+    trigger:
+        execute player command "/sk reload balmanage.sk"
+        loop all players:
+            if loop-player has permission "staff":
+                send "{@p} &7Configuration reloaded." to loop-player
