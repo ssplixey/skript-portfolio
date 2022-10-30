@@ -1,0 +1,169 @@
+# Shards Manager
+# Shards are "tokens" but renamed for the unique server 'HotGenz'
+# Created by splixey#8825 
+# HotGenz © All Rights Reserved
+
+options:
+    symbol: ❋
+    prefix: &5&lSHARDS &8»
+    p: &c&lSHARDSMANAGE &8»
+
+on join:
+    loop all players:
+        if {shards::balance::%loop-player's uuid%} is not set:
+            set {shards::balance::%loop-player's uuid%} to 0
+            
+every 100 seconds:
+    loop all players:
+        if {shards::balance::%loop-player's uuid%} is not set:
+            set {shards::balance::%loop-player's uuid%} to 0
+
+command /shards [<player>]:
+    trigger:
+        if arg-1 is set:
+            if player has permission "staff.viewshards":
+                if {shards::balance::%arg-1's uuid%} is set:
+                    send "&6%arg-1%'s Shards: &d%{shards::balance::%arg-1's uuid%}% {@symbol}"
+                if {shards::balance::%arg-1's uuid%} is not set:
+                    set {shards::balance::%arg-1's uuid%} to 0
+                    send "&6%arg-1%'s Shards: &d%{shards::balance::%arg-1's uuid%}% {@symbol}"
+            
+            if player does not have permission "staff.viewshards":
+                send " &4&lHey! &7You do not have permission to use this extension."
+        if arg-1 is not set:
+            send "&6Shards: &d%{shards::balance::%player's uuid%}% {@symbol}"
+
+
+command /shardmanage [<text>] [<player>] [<integer>]:
+    permission: admin.balmanage
+    permission message: &c&lHey! &7You do not have permission to use this command.
+    trigger:
+        if arg-1 is set:
+            if arg-1 is "set" or "reset" or "resetall" or "remove" or "add" or "options":
+                
+                if arg-1 is "set":
+                    if arg-2 is set:
+                        if arg-3 is set:
+                    
+                            set {shards::balance::%arg-2's uuid%} to arg-3
+                            send "{@p} &aSet %arg-2%'s shard balance to &6{@symbol}%arg-3%&a."
+                            send "{@p} &6%player% &ahas set your shards balance to &6{@symbol}%arg-3%&a." to arg-2
+                            
+                        if arg-3 is not set:
+                            send "&c&lHey! &7You must specify an amount."
+                    if arg-2 is not set:
+                        send "&c&lHey! &7You must specify a player."
+                
+                if arg-1 is "reset":
+                    if arg-2 is set:
+                            
+                        set {shards::balance::%arg-2's uuid%} to 0
+                        send "{@p} &aSet %arg-2%'s shard balance to &6{@symbol}0&a."
+                        send "{@p} &6%player% &ahas reset your shards balance back to &6{@symbol}0&a." to arg-2
+                        
+                    if arg-2 is not set:
+                        send "&c&lHey! &7You must specify a player!"
+                
+                if arg-1 is "resetall":
+                    
+                    loop all players:
+                        set {shards::balance::%loop-player's uuid%} to 0
+                        add 1 to {_stotalplayers}
+                    send "{@p} &aSet %{_stotalplayers}% players' shard balance to &6{@symbol}0&a."
+                    delete {_stotalplayers}
+                
+                if arg-1 is "remove":
+                    if arg-2 is set:
+                        if arg-3 is set:
+
+                            set {argumentbalance} to {shards::balance::%arg-2's uuid%}
+                            remove arg-3 from {shards::balance::%arg-2's uuid%}
+                            send "{@p} &aSet %arg-2%'s shard balance to &6{@symbol}%{shards::balance::%arg-2's uuid%}%&a. &c(%{argumentbalance}% - %arg-3%)"
+                            send "{@p} &6%player% &ahas set your shards balance to &6{@symbol}%{shards::balance::%arg-2's uuid%}%&a. &c(%{argumentbalance}% - %arg-3%)" to arg-2
+                            delete {argumentbalance}
+                        
+                        if arg-3 is not set:
+                            send "&c&lHey! &7You must specify an amount!"
+                    if arg-2 is not set:
+                        send "&c&lHey! &7You must specify a player!"
+                
+                if arg-1 is "add":
+                    if arg-2 is set:
+                        if arg-3 is set:
+                            
+                            set {argumentbalance} to {shards::balance::%arg-2's uuid%}
+                            add arg-3 to {shards::balance::%arg-2's uuid%}
+                            send "{@p} &aSet %arg-2%'s shard balance to &6{@symbol}%{shards::balance::%arg-2's uuid%}%&a. &c(%{argumentbalance}% + %arg-3%)"
+                            send "{@p} &6%player% &ahas set your shards balance to &6{@symbol}%{shards::balance::%arg-2's uuid%}%&a. &c(%{argumentbalance}% + %arg-3%)" to arg-2
+                            delete {argumentbalance}
+                        
+                        if arg-3 is not set:
+                            send "&c&lHey! &7You must specify an amount!"
+                    if arg-2 is not set:
+                        send "&c&lHey! &7You must specify a player!"
+                
+                if arg-1 is "options":
+                    send "" 
+                    send "&b&lShowing all options for &cSHARDMANAGE&b&l:"
+                    send "   &8➥ &foptions &c- &7Opens this menu."
+                    send "   &8➥ &fset &c- &7Will set the specified player's shard balance to the specified amount."
+                    send "   &8➥ &fadd &c- &7Will add the specified amount to the specified player's shard balance."
+                    send "   &8➥ &fremove &c- &7Will remove the specified amount from the specified player's shards balance."
+                    send "   &8➥ &freset &c- &7Will reset the specified player's shards balance back to 0."
+                    send "   &8➥ &fresetall &c-&7Will reset all player's shards balances back to 0."
+                    send ""
+                    send "&b&lShowing correct usages for &cSHARDSMANAGE&b&l:"
+                    send "   &8➥ &fset &c- &7/shardmanage set <player> <amount to set>"
+                    send "   &8➥ &fadd &c- &7/shardmanage add <player> <amount to add>"
+                    send "   &8➥ &fremove &c- &7/shardmanage remove <player> <amount to remove>"
+                    send "   &8➥ &freset &c- &7/shardmanage reset <player>"
+                    send "   &8➥ &fresetall &c- &7/shardmanage resetall"
+                    send ""
+                
+            if arg-1 is not "set" or "reset" or "resetall" or "remove" or "add" or "options":
+                send "" 
+                send "&b&lShowing all options for &cSHARDMANAGE&b&l:"
+                send "   &8➥ &foptions &c- &7Opens this menu."
+                send "   &8➥ &fset &c- &7Will set the specified player's shard balance to the specified amount."
+                send "   &8➥ &fadd &c- &7Will add the specified amount to the specified shard player's balance."
+                send "   &8➥ &fremove &c- &7Will remove the specified amount from the specified shard player's balance."
+                send "   &8➥ &freset &c- &7Will reset the specified player's shard balance back to 0."
+                send "   &8➥ &fresetall &c-&7Will reset all player's shard balances back to 0."
+                send ""
+                send "&b&lShowing correct usages for &cSHARDMANAGE&b&l:"
+                send "   &8➥ &fset &c- &7/shardmanage set <player> <amount to set>"
+                send "   &8➥ &fadd &c- &7/shardmanage add <player> <amount to add>"
+                send "   &8➥ &fremove &c- &7/shardmanage remove <player> <amount to remove>"
+                send "   &8➥ &freset &c- &7/shardmanage reset <player>"
+                send "   &8➥ &fresetall &c- &7/shardmanage resetall"
+                send ""
+        
+        if arg-1 is not set:
+            send "" 
+            send "&b&lShowing all options for &cSHARDMANAGE&b&l:"
+            send "   &8➥ &foptions &c- &7Opens this menu."
+            send "   &8➥ &fset &c- &7Will set the specified player's shard balance to the specified amount."
+            send "   &8➥ &fadd &c- &7Will add the specified amount to the specified player's shard balance."
+            send "   &8➥ &fremove &c- &7Will remove the specified amount from the specified player's shard balance."
+            send "   &8➥ &freset &c- &7Will reset the specified player's shard balance back to 0."
+            send "   &8➥ &fresetall &c-&7Will reset all player's shard balances back to 0."
+            send ""
+            send "&b&lShowing correct usages for &cSHARDMANAGE&b&l:"
+            send "   &8➥ &fset &c- &7/shardmanage set <player> <amount to set>"
+            send "   &8➥ &fadd &c- &7/shardmanage add <player> <amount to add>"
+            send "   &8➥ &fremove &c- &7/shardmanage remove <player> <amount to remove>"
+            send "   &8➥ &freset &c- &7/shardmanage reset <player>"
+            send "   &8➥ &fresetall &c- &7/shardmanage resetall"
+            
+on tab complete of "/shardmanage":
+    set tab completions for position 1 to "options" and "set" and "add" and "remove" and "reset" and "resetall"
+
+
+command /resetshardmanage:
+    permission: admin.resetbalmanage
+    permission message: &c&lHey! &7You do not have permission to use this command.
+    trigger:
+        execute player command "/sk reload shards.sk"
+        loop all players:
+            if loop-player has permission "staff":
+                send "{@p} &7Configuration reloaded." to loop-player
