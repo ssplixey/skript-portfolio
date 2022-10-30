@@ -1,0 +1,51 @@
+# Daily Rewards
+
+options:
+    
+    perm: &cYou do not have permission to use this command.
+
+    file: dailyreward.sk
+
+
+command /daily [<string>]:
+    trigger:
+        if arg-1 is not set:
+            daily(player)
+        else if arg-1 is set:
+            if arg-1 is "reload":
+                if player has permission "admin.daily.reload":
+                    execute player command "/sk reload {@file}"
+                    send title "&aConfiguration Reloaded" with subtitle "&7{@file}"
+                if player does not have permission "admin.daily.reload":
+                    send "&cYou do not have permission to use this sub command."
+            if arg-1 is not "reload":
+                daily(player)
+
+function daily(p: player):
+    set metadata tag "Daily" of {_P} to dispenser inventory named "&0Daily Reward"
+    set {_waited} to difference between {daily::cooldown::%{_P}'s uuid%} and now
+    if {_waited} is greater than or equal to 24 hours:
+        set slot 4 of metadata tag "Daily" of {_P} to nether star named "&aDaily Reward" with lore "&6Status: &aReady" and "" and "&f(Click) to Claim"
+    if {_waited} is less than 24 hours:
+        set slot 4 of metadata tag "Daily" of {_P} to nether star named "&aDaily Reward" with lore "&6Status: &cNot Ready" and "&6Cooldown: &f%difference between {_waited} and 24 hours%"
+    
+    open (metadata tag "Daily" of {_P}) to {_P}
+
+on inventory click:
+    if event-inventory = (metadata tag "Daily" of player):
+        cancel event
+        if index of event-slot = 4:
+            set {_waited} to difference between {daily::cooldown::%player's uuid%} and now
+            if {_waited} < 24 hours:
+                send "&a&lCOOLDOWN &8| &cYou must wait %difference between {_waited} and 24 hours%."
+                close player's inventory
+                stop
+            set {daily::cooldown::%player's uuid%} to now
+            send "&a&lDAILY &8| &aClaimed daily reward!"
+            set {_A} to random integer between 1 and 100000000
+            add {_A} to player's balance
+            set {_B} to random integer between 1 and 100000
+            add {_B} to {tokens::balance::%player's uuid%}
+            close player's inventory
+            
+
