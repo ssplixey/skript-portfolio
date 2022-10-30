@@ -1,0 +1,16 @@
+command /slowchat <number>:
+    usage: &cUsage: /slowchat <integer>
+    permission: admin.slowchat
+    trigger:
+        set {slowchat} to "%arg-1% seconds" parsed as timespan
+        send "&b&lSLOWCHAT &8» &8Slow chat has been set to &e%arg-1% seconds&a!"
+
+on chat:
+    if player doesn't have permission "trainee":
+        set {schat} to difference between {schat.%player%} and now
+        if {schat} is less than {slowchat}:
+        cancel event
+        send "&b&lSLOWMODE &8» &7You must wait (&4% {slowchat}%&c) &7before speaking again!"
+        stop
+    set {schat.%player%} to now
+    stop
